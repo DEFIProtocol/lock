@@ -52,7 +52,7 @@ yarn start
 # 🧭 Table of contents
 
 - [`ethereum-boilerplate`](#ethereum-boilerplate)
-- [🚀 Quick Start](#-quick-start)
+- [🚀 Quick Start](#--start)
 - [🧭 Table of contents](#-table-of-contents)
 - [🏗 Ethereum Components](#-ethereum-components)
 - - [`<Account />`](#account-)
@@ -824,3 +824,8 @@ const SupportedTokens = () => {
 ```
 
 ### Where to host your dApp?
+#   g r i d L o c k  
+ #   g r i d L o c k  
+ #   g r i d L o c k  
+ #   g r i d L o c k  
+ 
