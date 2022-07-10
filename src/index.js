@@ -4,7 +4,7 @@ import App from "./App";
 import { MoralisProvider } from "react-moralis";
 import "./index.css";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
-import QuickStart from "components/QuickStart";
+import Home from "components/Home";
 
 /** Get your free Moralis Account https://moralis.io/ */
 
@@ -21,13 +21,14 @@ const Application = () => {
   if (isServerInfo)
     return (
       <MoralisProvider appId={APP_ID} serverUrl={SERVER_URL}>
+        {" "}
         <App isServerInfo />
       </MoralisProvider>
     );
   else {
     return (
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <QuickStart />
+        <Home />
       </div>
     );
   }

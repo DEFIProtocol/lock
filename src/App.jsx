@@ -8,37 +8,54 @@ import {
 } from "react-router-dom";
 import Account from "components/Account/Account";
 import Chains from "components/Chains";
-import TokenPrice from "components/TokenPrice";
-import ERC20Balance from "components/ERC20Balance";
-import ERC20Transfers from "components/ERC20Transfers";
-import DEX from "components/DEX";
-import NFTBalance from "components/NFTBalance";
+// import ERC20Transfers from "components/ERC20Transfers";
+// import DEX from "components/DEX";
 import Wallet from "components/Wallet";
-import { Layout, Tabs } from "antd";
+import { Layout, /*Tabs,*/ Typography, Space } from "antd";
 import "antd/dist/antd.css";
-import NativeBalance from "components/NativeBalance";
 import "./style.css";
-import QuickStart from "components/QuickStart";
-import Contract from "components/Contract/Contract";
-import Text from "antd/lib/typography/Text";
-import Ramper from "components/Ramper";
-import MenuItems from "./components/MenuItems";
+// import Contract from "components/Contract/Contract";
+import {
+  LandingPage,
+  Admin,
+  MenuItems,
+  NativeBalance,
+  Token,
+  ETHDEX,
+  Home,
+} from "./components";
+
 const { Header, Footer } = Layout;
+
+//<Route path="/1inch">
+//              <Tabs defaultActiveKey="1" style={{ alignItems: "center", color: "lime", marginTop: "50px" }}>
+//                <Tabs.TabPane tab={<span>Ethereum</span>} key="1">
+//                  <DEX chain="eth" />
+//                </Tabs.TabPane>
+//                <Tabs.TabPane tab={<span>Binance Smart Chain</span>} key="2">
+//                  <DEX chain="bsc" />
+//                </Tabs.TabPane>
+//                <Tabs.TabPane tab={<span>Polygon</span>} key="3">
+//                  <DEX chain="polygon" />
+//                </Tabs.TabPane>
+//              </Tabs>
+//            </Route>
 
 const styles = {
   content: {
     display: "flex",
     justifyContent: "center",
     fontFamily: "Roboto, sans-serif",
-    color: "#041836",
-    marginTop: "130px",
+    color: "black",
+    marginTop: "50px",
     padding: "10px",
+    backgroundColor: "black",
   },
   header: {
     position: "fixed",
     zIndex: 1,
     width: "100%",
-    background: "#fff",
+    background: "black",
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
@@ -49,13 +66,12 @@ const styles = {
   },
   headerRight: {
     display: "flex",
-    gap: "20px",
     alignItems: "center",
     fontSize: "15px",
     fontWeight: "600",
   },
 };
-const App = ({ isServerInfo }) => {
+const App = () => {
   const { isWeb3Enabled, enableWeb3, isAuthenticated, isWeb3EnableLoading } =
     useMoralis();
 
@@ -70,16 +86,9 @@ const App = ({ isServerInfo }) => {
     <Layout style={{ height: "100vh", overflow: "auto" }}>
       <Router>
         <Header style={styles.header}>
-          <Logo />
           <MenuItems />
           <div style={styles.headerRight}>
             <Chains />
-            <TokenPrice
-              address="0x1f9840a85d5af5bf1d1762f925bdaddc4201f984"
-              chain="eth"
-              image="https://cloudflare-ipfs.com/ipfs/QmXttGpZrECX5qCyXbBQiqgQNytVGeZW5Anewvh2jc4psg/"
-              size="40px"
-            />
             <NativeBalance />
             <Account />
           </div>
@@ -87,86 +96,69 @@ const App = ({ isServerInfo }) => {
 
         <div style={styles.content}>
           <Switch>
-            <Route exact path="/quickstart">
-              <QuickStart isServerInfo={isServerInfo} />
-            </Route>
+            {!isAuthenticated ? (
+              <Route path="/Home">
+                <LandingPage />
+              </Route>
+            ) : (
+              <Route path="/Home">
+                <Home />
+              </Route>
+            )}
+
             <Route path="/wallet">
               <Wallet />
             </Route>
-            <Route path="/1inch">
-              <Tabs defaultActiveKey="1" style={{ alignItems: "center" }}>
-                <Tabs.TabPane tab={<span>Ethereum</span>} key="1">
-                  <DEX chain="eth" />
-                </Tabs.TabPane>
-                <Tabs.TabPane tab={<span>Binance Smart Chain</span>} key="2">
-                  <DEX chain="bsc" />
-                </Tabs.TabPane>
-                <Tabs.TabPane tab={<span>Polygon</span>} key="3">
-                  <DEX chain="polygon" />
-                </Tabs.TabPane>
-              </Tabs>
+
+            <Route path="/ETHDEX">
+              <ETHDEX />
             </Route>
-            <Route path="/erc20balance">
-              <ERC20Balance />
+
+            <Route path="/admin">
+              <Admin />
             </Route>
-            <Route path="/onramp">
-              <Ramper />
+
+            <Route path="/:token?/:address?">
+              <Token />
             </Route>
-            <Route path="/erc20transfers">
-              <ERC20Transfers />
-            </Route>
-            <Route path="/nftBalance">
-              <NFTBalance />
-            </Route>
-            <Route path="/contract">
-              <Contract />
-            </Route>
-            <Route path="/">
-              <Redirect to="/quickstart" />
-            </Route>
-            <Route path="/ethereum-boilerplate">
-              <Redirect to="/quickstart" />
-            </Route>
-            <Route path="/nonauthenticated">
-              <>Please login using the "Authenticate" button</>
+
+            <Route>
+              <LandingPage path="/" />
             </Route>
           </Switch>
         </div>
       </Router>
-      <Footer style={{ textAlign: "center" }}>
-        <Text style={{ display: "block" }}>
-          ⭐️ Please star this{" "}
-          <a
-            href="https://github.com/ethereum-boilerplate/ethereum-boilerplate/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            boilerplate
+      <Footer style={{ textAlign: "center", backgroundColor: "black" }}>
+        <Typography.Title
+          level={4}
+          style={{
+            display: "block",
+            color: "lime",
+            margin: "0",
+            padding: "0",
+          }}
+        >
+          All rights Reserved
+        </Typography.Title>
+        <Typography.Title
+          level={3}
+          style={{
+            display: "block",
+            color: "lime",
+            margin: "0",
+            padding: "0",
+          }}
+        >
+          gridLock
+        </Typography.Title>
+        <Space>
+          <a style={{ color: "lime" }} href="/Home">
+            Home |
           </a>
-          , every star makes us very happy!
-        </Text>
-
-        <Text style={{ display: "block" }}>
-          🙋 You have questions? Ask them on the {""}
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            href="https://forum.moralis.io/t/ethereum-boilerplate-questions/3951/29"
-          >
-            Moralis forum
+          <a style={{ color: "lime" }} href="/1inch">
+            DEX
           </a>
-        </Text>
-
-        <Text style={{ display: "block" }}>
-          📖 Read more about{" "}
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            href="https://moralis.io?utm_source=boilerplatehosted&utm_medium=todo&utm_campaign=ethereum-boilerplat"
-          >
-            Moralis
-          </a>
-        </Text>
+        </Space>
       </Footer>
     </Layout>
   );

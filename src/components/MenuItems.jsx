@@ -1,9 +1,24 @@
 import { useLocation } from "react-router";
 import { Menu } from "antd";
 import { NavLink } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useMoralis } from "react-moralis";
 
 function MenuItems() {
+  const { Moralis, isAuthenticated } = useMoralis();
   const { pathname } = useLocation();
+  const [admin, setAdmin] = useState();
+
+  const getAdmin = async () => {
+    if (!isAuthenticated) return null;
+    const user = await Moralis.User.current();
+    let admin = user.get("Admin");
+    setAdmin(admin);
+  };
+
+  useEffect(() => {
+    getAdmin();
+  }, []);
 
   return (
     <Menu
@@ -15,33 +30,32 @@ function MenuItems() {
         fontWeight: "500",
         width: "100%",
         justifyContent: "center",
+        backgroundColor: "black",
       }}
       defaultSelectedKeys={[pathname]}
     >
-      <Menu.Item key="/quickstart">
-        <NavLink to="/quickstart">🚀 Quick Start</NavLink>
+      <Menu.Item key="/Home">
+        <NavLink to="/Home" style={{ color: "lime" }}>
+          Home
+        </NavLink>
+      </Menu.Item>
+      <Menu.Item key="/ETHDEX">
+        <NavLink to="/ETHDEX" style={{ color: "lime" }}>
+          DEX
+        </NavLink>
       </Menu.Item>
       <Menu.Item key="/wallet">
-        <NavLink to="/wallet">👛 Wallet</NavLink>
+        <NavLink to="/wallet" style={{ color: "lime" }}>
+          Account
+        </NavLink>
       </Menu.Item>
-      <Menu.Item key="/1inch">
-        <NavLink to="/1inch">🏦 Dex</NavLink>
-      </Menu.Item>
-      <Menu.Item key="onramp">
-        <NavLink to="/onramp">💵 Fiat</NavLink>
-      </Menu.Item>
-      <Menu.Item key="/erc20balance">
-        <NavLink to="/erc20balance">💰 Balances</NavLink>
-      </Menu.Item>
-      <Menu.Item key="/erc20transfers">
-        <NavLink to="/erc20transfers">💸 Transfers</NavLink>
-      </Menu.Item>
-      <Menu.Item key="/nftBalance">
-        <NavLink to="/nftBalance">🖼 NFTs</NavLink>
-      </Menu.Item>
-      <Menu.Item key="/contract">
-        <NavLink to="/contract">📄 Contract</NavLink>
-      </Menu.Item>
+      {admin == false ? null : (
+        <Menu.Item key="/admin">
+          <NavLink to="/admin" style={{ color: "lime" }}>
+            Admin
+          </NavLink>
+        </Menu.Item>
+      )}
     </Menu>
   );
 }
