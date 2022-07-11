@@ -181,7 +181,6 @@ function Token() {
     return updateToken.then(getTokens());
   };
 
-
   // AAVE address 0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae
 
   return (
@@ -263,22 +262,16 @@ function Token() {
           Description
         </Title>
         <span style={{ color: "lime" }}>Token Type: {tokenMetaData?.Type}</span>
-        {userAddress == address ?
-          <UpdateType
-            address={address}
-            render={() => getTokens()}
-          />
-          : null}
+        {userAddress == address ? (
+          <UpdateType address={address} render={() => getTokens()} />
+        ) : null}
         <span style={{ color: "#909090", float: "left", paddingTop: "10px" }}>
           {tokenMetaData?.Description}
         </span>
         <span>
-          {userAddress == address ?
-            <UpdateDescription
-              address={address}
-              render={() => getTokens()}
-            />
-            : null}
+          {userAddress == address ? (
+            <UpdateDescription address={address} render={() => getTokens()} />
+          ) : null}
         </span>
       </Card>
 
@@ -299,12 +292,9 @@ function Token() {
           {tokenMetaData?.Website}
         </a>
         <span>
-          {userAddress == address ?
-            <UpdateWebsite
-              address={address}
-              render={() => getTokens()}
-            />
-            : null}
+          {userAddress == address ? (
+            <UpdateWebsite address={address} render={() => getTokens()} />
+          ) : null}
         </span>
       </Card>
 
@@ -327,8 +317,8 @@ function Token() {
       </Card>
 
       {!tokenMetaData?.ProfilePic &&
-        !tokenMetaData?.Video &&
-        !tokenMetaData?.Pictures ? null : (
+      !tokenMetaData?.Video &&
+      !tokenMetaData?.Pictures ? null : (
         <Card
           style={{
             width: "43%",
