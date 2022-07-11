@@ -1,21 +1,22 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import { useMoralis } from "react-moralis";
 
-function AddVideo({ address, render }) {
+function UpdateDescription({ render, address }) {
+
     const { Moralis } = useMoralis();
     const [isOpen, setIsOpen] = useState(false);
-    const [url, setUrl] = useState(true);
+    const [description, setDescription] = useState();
 
-    // update Video
-    const updateYoutubeUrl = async () => {
+    const updateDescription = async () => {
         const tokens = Moralis.Object.extend("Tokens");
         const query = new Moralis.Query(tokens);
         query.equalTo("Address", `${address}`);
         const updateToken = await query.first();
-        updateToken.set("Video", url);
+        updateToken.set("Description", description);
         await updateToken.save();
         return updateToken.then(render().then(() => setIsOpen(false)));
     };
+
 
     return (
         <div>
@@ -29,7 +30,7 @@ function AddVideo({ address, render }) {
                 }}
                 onClick={() => setIsOpen(true)}
             >
-                Add Video
+                Update Description
             </button>
             {!isOpen ? null :
                 <div
@@ -44,17 +45,18 @@ function AddVideo({ address, render }) {
                         padding: "50px",
                         zIndex: 1000,
                     }}>
-                    <span style={{ color: "#909090" }}>Please enter your Youtube URL below to show investors your project!</span>
-                    <input
-                        type="text"
-                        placeholder="Youtube URL"
+                    <span style={{ color: "#909090" }}>Be sure to be specific with your company description so investors know your companies goals and intentions!</span>
+                    <textarea
+                        type="textbox"
+                        value={description}
+                        placeholder="Company Description"
                         style={{
                             width: "95%",
                             margin: "15px auto",
                             backgroundColor: "black",
                             color: "lightGray",
                         }}
-                        onChange={(e) => setUrl(e.target.value)}
+                        onChange={(e) => setDescription(e.target.value)}
                     />
                     <button
                         style={{
@@ -64,7 +66,7 @@ function AddVideo({ address, render }) {
                             borderRadius: "0.5rem",
                             border: "3px solid black",
                         }}
-                        type="button" onClick={updateYoutubeUrl}>Update</button>
+                        type="button" onClick={updateDescription}>Update</button>
                     <button
                         style={{
                             backgroundColor: "lime",
@@ -76,7 +78,7 @@ function AddVideo({ address, render }) {
                 </div>
             }
         </div>
-    );
+    )
 }
 
-export default AddVideo;
+export default UpdateDescription

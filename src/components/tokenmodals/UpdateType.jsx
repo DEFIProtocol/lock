@@ -1,21 +1,21 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import { useMoralis } from "react-moralis";
 
-function AddVideo({ address, render }) {
+function UpdateType({ address, render }) {
     const { Moralis } = useMoralis();
     const [isOpen, setIsOpen] = useState(false);
-    const [url, setUrl] = useState(true);
+    const [type, setType] = useState();
 
-    // update Video
-    const updateYoutubeUrl = async () => {
+    const updateType = async () => {
         const tokens = Moralis.Object.extend("Tokens");
         const query = new Moralis.Query(tokens);
         query.equalTo("Address", `${address}`);
         const updateToken = await query.first();
-        updateToken.set("Video", url);
+        updateToken.set("Type", type);
         await updateToken.save();
         return updateToken.then(render().then(() => setIsOpen(false)));
     };
+
 
     return (
         <div>
@@ -29,7 +29,7 @@ function AddVideo({ address, render }) {
                 }}
                 onClick={() => setIsOpen(true)}
             >
-                Add Video
+                Update Type
             </button>
             {!isOpen ? null :
                 <div
@@ -44,17 +44,17 @@ function AddVideo({ address, render }) {
                         padding: "50px",
                         zIndex: 1000,
                     }}>
-                    <span style={{ color: "#909090" }}>Please enter your Youtube URL below to show investors your project!</span>
+                    <span style={{ color: "#909090" }}>Token's are classified as Security, Utilities, Payment, or Stablecoin. For more information on types please vist our <a style={{ color: "lime" }} href="/">Company Page</a> for further details.</span>
                     <input
                         type="text"
-                        placeholder="Youtube URL"
+                        placeholder="Token Type"
                         style={{
                             width: "95%",
                             margin: "15px auto",
                             backgroundColor: "black",
                             color: "lightGray",
                         }}
-                        onChange={(e) => setUrl(e.target.value)}
+                        onChange={(e) => setType(e.target.value)}
                     />
                     <button
                         style={{
@@ -64,7 +64,7 @@ function AddVideo({ address, render }) {
                             borderRadius: "0.5rem",
                             border: "3px solid black",
                         }}
-                        type="button" onClick={updateYoutubeUrl}>Update</button>
+                        type="button" onClick={updateType}>Update</button>
                     <button
                         style={{
                             backgroundColor: "lime",
@@ -79,4 +79,4 @@ function AddVideo({ address, render }) {
     );
 }
 
-export default AddVideo;
+export default UpdateType

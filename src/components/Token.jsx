@@ -17,6 +17,9 @@ import {
   Announcements,
   Order,
   AddVideo,
+  UpdateType,
+  UpdateDescription,
+  UpdateWebsite,
 } from "./tokenmodals";
 import { Image } from "cloudinary-react";
 // import useInchDex from "hooks/useInchDex";
@@ -159,26 +162,6 @@ function Token() {
   };
 
   // update description
-  const updateDescription = () => {
-    var description = prompt("New Description");
-    if (description != null) {
-      updateAccountDescription(description).then(
-        alert("Your organization description has been changed!"),
-      );
-    }
-  };
-
-  const updateAccountDescription = async (description) => {
-    const tokens = Moralis.Object.extend("Tokens");
-    const query = new Moralis.Query(tokens);
-    query.equalTo("Address", `${address}`);
-    const updateToken = await query.first();
-    updateToken.set("Description", description);
-    await updateToken.save();
-    return updateToken.then(getTokens());
-  };
-
-  // update description
   const updateWebsite = () => {
     var website = prompt("Company Url");
     if (website != null) {
@@ -198,27 +181,6 @@ function Token() {
     return updateToken.then(getTokens());
   };
 
-  //update token type
-  const updateTokenType = () => {
-    const type = prompt(
-      "Token types should be classified as a Utility, Stablecoin, Payment, and Security",
-    );
-    if (type != null) {
-      updateAccountType(type).then(
-        alert("Your organization description has been changed!"),
-      );
-    }
-  };
-
-  const updateAccountType = async (type) => {
-    const tokens = Moralis.Object.extend("Tokens");
-    const query = new Moralis.Query(tokens);
-    query.equalTo("Address", `${address}`);
-    const updateToken = await query.first();
-    updateToken.set("Type", type);
-    await updateToken.save();
-    return updateToken.then(getTokens());
-  };
 
   // AAVE address 0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae
 
@@ -301,35 +263,22 @@ function Token() {
           Description
         </Title>
         <span style={{ color: "lime" }}>Token Type: {tokenMetaData?.Type}</span>
-        {userAddress == address ? (
-          <button
-            onClick={updateTokenType}
-            style={{
-              backgroundColor: "lime",
-              borderRadius: "0.5rem",
-              border: "3px solid black",
-            }}
-          >
-            Edit Token Type
-          </button>
-        ) : null}
+        {userAddress == address ?
+          <UpdateType
+            address={address}
+            render={() => getTokens()}
+          />
+          : null}
         <span style={{ color: "#909090", float: "left", paddingTop: "10px" }}>
           {tokenMetaData?.Description}
         </span>
         <span>
-          {userAddress == address ? (
-            <button
-              onClick={updateDescription}
-              style={{
-                position: "relative",
-                backgroundColor: "lime",
-                borderRadius: "0.5rem",
-                border: "3px solid black",
-              }}
-            >
-              Edit Description
-            </button>
-          ) : null}
+          {userAddress == address ?
+            <UpdateDescription
+              address={address}
+              render={() => getTokens()}
+            />
+            : null}
         </span>
       </Card>
 
@@ -350,18 +299,12 @@ function Token() {
           {tokenMetaData?.Website}
         </a>
         <span>
-          {userAddress == address ? (
-            <button
-              onClick={updateWebsite}
-              style={{
-                backgroundColor: "lime",
-                borderRadius: "0.5rem",
-                border: "3px solid black",
-              }}
-            >
-              Edit Company Website
-            </button>
-          ) : null}
+          {userAddress == address ?
+            <UpdateWebsite
+              address={address}
+              render={() => getTokens()}
+            />
+            : null}
         </span>
       </Card>
 
@@ -384,8 +327,8 @@ function Token() {
       </Card>
 
       {!tokenMetaData?.ProfilePic &&
-      !tokenMetaData?.Video &&
-      !tokenMetaData?.Pictures ? null : (
+        !tokenMetaData?.Video &&
+        !tokenMetaData?.Pictures ? null : (
         <Card
           style={{
             width: "43%",
