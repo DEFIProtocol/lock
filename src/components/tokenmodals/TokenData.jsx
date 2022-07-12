@@ -15,7 +15,7 @@ function TokenData({ contractAddress, contractABI, usdPrice }) {
     await Moralis.enableWeb3();
     var web3 = new Web3(
       new Web3.providers.HttpProvider(
-        "https://speedy-nodes-nyc.moralis.io/e0b5800131e142a5b8dbb709/eth/mainnet/archive",
+        "https://speedy-nodes-nyc.moralis.io/{}/eth/mainnet/archive",
         { timeout: 100000 },
       ),
     );
@@ -38,7 +38,7 @@ function TokenData({ contractAddress, contractABI, usdPrice }) {
   const getTotalSupply = async () => {
     var web3 = new Web3(
       new Web3.providers.HttpProvider(
-        "https://speedy-nodes-nyc.moralis.io/e0b5800131e142a5b8dbb709/bsc/mainnet",
+        "https://speedy-nodes-nyc.moralis.io/{}/bsc/mainnet",
         { timeout: 100000 },
       ),
     );
