@@ -12,26 +12,13 @@ function Order({
   ethValue,
   renderOrder,
 }) {
-  const { Moralis, isAuthenticated, isInitialized } = useMoralis();
-  var toToken = {
-    symbol: `${symbol}`,
-    name: `${name}`,
-    address: `${address}`,
-    decimals: 18,
-    logoURI: `${logo}`,
-  };
-  var sellToken = {
-    symbol: `${symbol}`,
-    name: `${name}`,
-    address: `${address}`,
-    decimals: 18,
-    logoURI: `${logo}`,
-  };
+  const { Moralis, isInitialized } = useMoralis();
   const { getQuote } = useInchDex();
   const [orderPrice, setOrderPrice] = useState("");
   const [orderAmount, setOrderAmount] = useState();
   const [quote, setQuote] = useState();
   const [priced, setPriced] = useState("usd");
+  const [isOpen, setIsOpen] = useState(false);
   // var ethMultiplier = 1 / ethValue;
   const [checked, setChecked] = useState({
     ethEx: false,
@@ -54,277 +41,88 @@ function Order({
     }
   };
 
-  const estimatedGas = async () => {
+
+  const estimatedGas = async (buyOrSell) => {
     if (!isInitialized) return null;
-    try {
-      const fromToken = {
-        symbol: "WETH",
-        name: "Wrapped Ether",
-        address: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-        decimals: 18,
-        logoURI:
-          "https://tokens.1inch.io/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2.png",
-      };
-      const currentTrade = {
+    const WETH = {
+      symbol: "WETH",
+      name: "Wrapped Ether",
+      address: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      decimals: 18,
+      logoURI:
+        "https://tokens.1inch.io/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2.png",
+    };
+    var token =
+    {
+      symbol: `${symbol}`,
+      name: `${name}`,
+      address: `${address}`,
+      decimals: 18,
+      logoURI: `${logo}`,
+    };
+    console.log(token, WETH)
+    var fromToken = buyOrSell == "buy" ? WETH : token;
+    var toToken = buyOrSell == "buy" ? token : WETH;
+    var currentTrade = buyOrSell == "buy" ?
+      {
+        fromToken: fromToken,
+        toToken: toToken,
+        fromAmount: orderAmount,
+        chain: chain,
+      } :
+      {
         fromToken: fromToken,
         toToken: toToken,
         fromAmount: orderAmount,
         chain: chain,
       };
-      var gas = await getQuote(currentTrade);
-      var ethGas = `${gas?.estimatedGas} WEI`;
-      setQuote(ethGas);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const submitOrder = async () => {
-    if (!quote) return null;
-    if (priced == "usd") {
-      var orderValue = orderPrice * orderAmount;
-      var ethCost = ethValue * orderAmount * 1.005;
-      var orderTotal = (orderValue * 1.005).toLocaleString();
-      var fee = (orderTotal - orderValue).toLocaleString();
-      var orderDetails = {
-        priced: priced,
-        order: "Buy",
-        tokenName: name,
-        address: address,
-        orderTotal: orderTotal,
-        ethTotal: ethCost,
-        exuectionPrice: orderPrice,
-        orderAmount: orderAmount,
-        estimatedGas: quote,
-        transactionFee: fee,
-      };
-      let approve = confirm(`
-                Purchase of ${name}:
-                    USD/${name}
-                    Token Amount:  ${orderAmount}
-                    Order Price:  $${orderPrice} 
-                    Estimated Gas:  ${quote}
-                    Transaction Fee:  $${fee}
-                    Order Total in USD:  $${orderTotal}
-                    Order Total in ETH:  ${ethCost}
-                **Due to exchange rates we hold additional Ethereum to complete your order**
-                **Additional ethereum will be returned to you**
-                **Please confirm your order.**
-                `);
-      if (approve == true) {
-        try {
-          const user = await Moralis.User.current();
-          await user.addUnique("Orders", orderDetails);
-          await user.save();
-          const orders = Moralis.Object.extend("Orders");
-          const order = new orders();
-          order.set("orderAmount", orderAmount);
-          order.set("priced", priced);
-          order.set("tokenName", name);
-          order.set("address", address);
-          order.set("orderTotal", orderTotal);
-          order.set("exuecutionPrice", orderPrice);
-          order.set("orderAmount", orderAmount);
-          order.set("transactionFee", fee);
-          order.set("estimatedGas", quote);
-          order.set("order", "Buy");
-          await order.save();
-        } catch (error) {
-          alert("error" + error.code + error.message);
-        }
-      }
-      renderOrder();
-    } else {
-      var orderValue = orderPrice * orderAmount;
-      var ethCost = orderValue * 1.005;
-      var fee = ethCost - orderValue;
-      var orderTotal = ethCost * (price / ethValue);
-      var orderDetails = {
-        priced: priced,
-        order: "Buy",
-        tokenName: name,
-        address: address,
-        orderTotal: orderTotal,
-        exuectionPrice: orderPrice,
-        orderAmount: orderAmount,
-        estimatedGas: quote,
-        transactionFee: fee,
-      };
-      let approve = confirm(`
-                Purchase of ${name}:
-                    ETH/${name}
-                    Token Amount:  ${orderAmount}
-                    Order Price:  ${orderPrice} 
-                    Estimated Gas:  ${quote}
-                    Transaction Fee:  ${fee} ETH
-                    Order Total in USD:  $${orderTotal}
-                    Order Total in ETH:  ${ethCost}
-                **Due to exchange rates we hold additional Ethereum to complete your order**
-                **Additional ethereum will be returned to you**
-                **Please confirm your order.**
-                `);
-      if (approve == true) {
-        try {
-          const user = await Moralis.User.current();
-          await user.addUnique("Orders", orderDetails);
-          await user.save();
-          const orders = Moralis.Object.extend("Orders");
-          const order = new orders();
-          order.set("orderAmount", orderAmount);
-          order.set("priced", priced);
-          order.set("tokenName", name);
-          order.set("address", address);
-          order.set("orderTotal", orderTotal);
-          order.set("exuecutionPrice", orderPrice);
-          order.set("orderAmount", orderAmount);
-          order.set("transactionFee", fee);
-          order.set("estimatedGas", quote);
-          order.set("order", "Buy");
-          await issue.save();
-        } catch (error) {
-          alert("error" + error.code + error.message);
-        }
-        renderOrder();
-      }
-    }
-  };
-
-  const estimatedGasSell = async () => {
-    if (!isInitialized) return null;
+    console.log(currentTrade);
+    console.log(toToken);
+    console.log(fromToken);
     try {
-      const toToken = {
-        symbol: "WETH",
-        name: "Wrapped Ether",
-        address: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-        decimals: 18,
-        logoURI:
-          "https://tokens.1inch.io/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2.png",
-      };
-      const currentTrade = {
-        fromToken: sellToken,
-        toToken: toToken,
-        fromAmount: orderAmount,
-        chain: chain,
-      };
       var gas = await getQuote(currentTrade);
       var ethGas = `${gas?.estimatedGas} WEI`;
       setQuote(ethGas);
     } catch (error) {
       console.log(error);
     }
+    handleOrder();
   };
 
-  const submitSellOrder = async () => {
-    if (!quote) return null;
-    if (priced == "usd") {
-      var orderValue = orderPrice * orderAmount;
-      var ethCost = ethValue * orderAmount * 1.005;
-      var orderTotal = (orderValue * 1.005).toLocaleString();
-      var fee = (orderTotal - orderValue).toLocaleString();
-      var orderDetails = {
-        priced: priced,
-        order: "Sell",
-        tokenName: name,
-        address: address,
-        orderTotal: orderTotal,
-        ethTotal: ethCost,
-        exuectionPrice: orderPrice,
-        orderAmount: orderAmount,
-        estimatedGas: quote,
-        transactionFee: fee,
-      };
-      let approve = confirm(`
-                Purchase of ${name}:
-                    USD/${name}
-                    Token Amount:  ${orderAmount}
-                    Order Price:  $${orderPrice} 
-                    Estimated Gas:  ${quote}
-                    Transaction Fee:  $${fee}
-                    Order Total in USD:  $${orderTotal}
-                    Order Total in ETH:  ${ethCost}
-                **Due to exchange rates we hold additional Ethereum to complete your order**
-                **Additional ethereum will be returned to you**
-                **Please confirm your order.**
-                `);
-      if (approve == true) {
-        try {
-          const user = await Moralis.User.current();
-          await user.addUnique("Orders", orderDetails);
-          await user.save();
-          const orders = Moralis.Object.extend("Orders");
-          const order = new orders();
-          order.set("orderAmount", orderAmount);
-          order.set("priced", priced);
-          order.set("tokenName", name);
-          order.set("address", address);
-          order.set("orderTotal", orderTotal);
-          order.set("exuecutionPrice", orderPrice);
-          order.set("orderAmount", orderAmount);
-          order.set("transactionFee", fee);
-          order.set("estimatedGas", quote);
-          order.set("order", "Sell");
-          await order.save();
-        } catch (error) {
-          alert("error" + error.code + error.message);
-        }
-      }
-      renderOrder();
-    } else {
-      var orderValue = orderPrice * orderAmount;
-      var ethCost = orderValue * 1.005;
-      var fee = ethCost - orderValue;
-      var orderTotal = ethCost * (price / ethValue);
-      var orderDetails = {
-        priced: priced,
-        order: "Sell",
-        tokenName: name,
-        address: address,
-        orderTotal: orderTotal,
-        exuectionPrice: orderPrice,
-        orderAmount: orderAmount,
-        estimatedGas: quote,
-        transactionFee: fee,
-      };
-      let approve = confirm(`
-                Purchase of ${name}:
-                    ETH/${name}
-                    Token Amount:  ${orderAmount}
-                    Order Price:  ${orderPrice} 
-                    Estimated Gas:  ${quote}
-                    Transaction Fee:  ${fee} ETH
-                    Order Total in USD:  $${orderTotal}
-                    Order Total in ETH:  ${ethCost}
-                **Due to exchange rates we hold additional Ethereum to complete your order**
-                **Additional ethereum will be returned to you**
-                **Please confirm your order.**
-                `);
-      if (approve == true) {
-        try {
-          const user = await Moralis.User.current();
-          await user.addUnique("Orders", orderDetails);
-          await user.save();
-          const issues = Moralis.Object.extend("Admin");
-          const issue = new issues();
-          const orders = Moralis.Object.extend("Orders");
-          const order = new orders();
-          order.set("orderAmount", orderAmount);
-          order.set("priced", priced);
-          order.set("tokenName", name);
-          order.set("address", address);
-          order.set("orderTotal", orderTotal);
-          order.set("exuecutionPrice", orderPrice);
-          order.set("orderAmount", orderAmount);
-          order.set("transactionFee", fee);
-          order.set("estimatedGas", quote);
-          order.set("order", "Sell");
-          await order.save();
-        } catch (error) {
-          alert("error" + error.code + error.message);
-        }
-        renderOrder();
-      }
+  const handleOrder = () => {
+    var orderValue = orderPrice * orderAmount;
+    var ethCost = priced == "usd" ?
+      (ethValue * orderAmount * 1.01).toLocaleString() : // buy or sell token in usd
+      orderValue * 1.01; // buy or sell token in eth
+    var orderTotal = priced == "usd" ?
+      (orderValue * 1.01).toLocaleString() : // buy or sell token in usd
+      ethCost * (price / ethValue); // buy or sell token in eth
+    var fee = priced == "usd" ?
+      (orderTotal - orderValue).toLocaleString() : // buy or sell token in usd
+      (ethCost - orderValue).toLocaleString(); // buy or sell token in eth
+    return orderValue, orderTotal, ethCost, fee;
+  }
+
+  const postOrder = async (buyOrSell, fee, orderTotal, ethCost) => {
+    try {
+      const orders = Moralis.Object.extend("Orders");
+      const order = new orders();
+      order.set("orderAmount", orderAmount);
+      order.set("priced", priced);
+      order.set("tokenName", name);
+      order.set("address", address);
+      order.set("orderTotal", orderTotal);
+      order.set("exuecutionPrice", orderPrice);
+      order.set("transactionFee", fee);
+      order.set("estimatedGas", quote);
+      order.set("order", buyOrSell);
+      order.set("ethCost", ethCost);
+      await order.save();
+    } catch (error) {
+      alert("error" + error.code + error.message);
     }
-  };
+    renderOrder();
+  }
 
   return (
     <form>
@@ -376,7 +174,8 @@ function Order({
       />
       <button
         type="button"
-        onClick={() => estimatedGas().then(submitOrder())}
+        value="buy"
+        onClick={(e) => estimatedGas(e.target.value).then(() => setIsOpen(true))}
         style={{
           backgroundColor: "green",
           margin: "10px",
@@ -389,7 +188,8 @@ function Order({
       </button>
       <button
         type="button"
-        onClick={() => estimatedGasSell().then(submitSellOrder())}
+        value="sell"
+        onClick={(e) => estimatedGas(e.target.value).then(() => setIsOpen(true))}
         style={{
           backgroundColor: "red",
           margin: "10px",
@@ -400,6 +200,22 @@ function Order({
       >
         Sell
       </button>
+      {!isOpen ? null :
+        <div>
+          <span>Purchase of ${name}:
+            {priced == "usd" ? <span>USD</span> : <span>ETH</span>}/${name}
+            Token Amount:  ${orderAmount}
+            Order Price:  $${orderPrice}
+            Estimated Gas:  ${quote}
+            Transaction Fee:  $${fee}
+            Order Total in USD:  $${orderTotal}
+            Order Total in ETH:  ${ethCost}
+            **Due to exchange rates we hold additional Ethereum to complete your order**
+            **Additional ethereum will be returned to you**
+            **Please confirm your order.**</span>
+          <button type="button" onClick={postOrder}>Confirm</button>
+          <button type="button" onClick={() => setIsOpen(false)}>Cancel</button>
+        </div>}
     </form>
   );
 }
