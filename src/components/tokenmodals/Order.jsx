@@ -43,7 +43,6 @@ function Order({
     }
   };
 
-
   const estimatedGas = async (buyOrSell) => {
     handleOrder(buyOrSell);
     if (!isInitialized) return null;
@@ -55,8 +54,7 @@ function Order({
       logoURI:
         "https://tokens.1inch.io/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2.png",
     };
-    var token =
-    {
+    var token = {
       symbol: `${symbol}`,
       name: `${name}`,
       address: `${address}`,
@@ -65,19 +63,20 @@ function Order({
     };
     var fromToken = buyOrSell == "buy" ? WETH : token;
     var toToken = buyOrSell == "buy" ? token : WETH;
-    var currentTrade = buyOrSell == "buy" ?
-      {
-        fromToken: fromToken,
-        toToken: toToken,
-        fromAmount: orderAmount,
-        chain: chain,
-      } :
-      {
-        fromToken: fromToken,
-        toToken: toToken,
-        fromAmount: orderAmount,
-        chain: chain,
-      };
+    var currentTrade =
+      buyOrSell == "buy"
+        ? {
+          fromToken: fromToken,
+          toToken: toToken,
+          fromAmount: orderAmount,
+          chain: chain,
+        }
+        : {
+          fromToken: fromToken,
+          toToken: toToken,
+          fromAmount: orderAmount,
+          chain: chain,
+        };
     try {
       var gas = await getQuote(currentTrade);
       var ethGas = `${gas?.estimatedGas} WEI`;
@@ -89,31 +88,33 @@ function Order({
   };
 
   const handleOrder = () => {
-
     //console.log(quote)
     //console.log(decQuote)
     var orderValue = orderPrice * orderAmount;
-    var ethCost = priced == "usd" ?
-      (ethValue * orderAmount * 1.01) /*+ decQuote*/.toLocaleString() : // buy or sell token in usd
-      orderValue * 1.01 /*+ decQuote*/; // buy or sell token in eth
-    var orderTotal = priced == "usd" ?
-      (orderValue * 1.01)   /* (decQuote * (ethValue / price))*/.toLocaleString() : // buy or sell token in usd
-      ethCost * (price / ethValue)  /* (decQuote * (ethValue / price))*/ // buy or sell token in eth
-    var fee = priced == "usd" ?
-      (orderTotal - orderValue).toLocaleString() : // buy or sell token in usd
-      (ethCost - orderValue).toLocaleString(); // buy or sell token in eth
+    var ethCost =
+      priced == "usd"
+        ? (ethValue * orderAmount * 1.01) /*+ decQuote*/
+          .toLocaleString() // buy or sell token in usd
+        : orderValue * 1.01; /*+ decQuote*/ // buy or sell token in eth
+    var orderTotal =
+      priced == "usd"
+        ? (orderValue * 1.01) /* (decQuote * (ethValue / price))*/
+          .toLocaleString() // buy or sell token in usd
+        : ethCost * (price / ethValue); /* (decQuote * (ethValue / price))*/ // buy or sell token in eth
+    var fee =
+      priced == "usd"
+        ? (orderTotal - orderValue).toLocaleString() // buy or sell token in usd
+        : (ethCost - orderValue).toLocaleString(); // buy or sell token in eth
     var orderDetails = {
       ethCost: ethCost,
       orderTotal: orderTotal,
       fee: fee,
-    }
+    };
     setOrderCost(orderDetails);
-  }
+  };
 
   const postOrder = async () => {
     try {
-      const user = Moralis.User.current();
-      const relation = user.relation("Orders");
       const orders = Moralis.Object.extend("Orders");
       const order = new orders();
       order.set("orderAmount", orderAmount);
@@ -126,13 +127,25 @@ function Order({
       order.set("estimatedGas", quote);
       order.set("order", BuyOrSell);
       order.set("ethCost", orderCost.ethCost);
-      relation.add(order.id);
+      userRelation(order);
       await order.save();
-      await user.save();
     } catch (error) {
       console.log(error);
     }
     renderOrder();
+  };
+
+  const userRelation = async (order) => {
+    console.log(order.id)
+    try {
+      const user = Moralis.User.current();
+      const relation = user.relation("Orders");
+      relation.add("Orders", order.id);
+      await user.save();
+    } catch (error) {
+      console.log(error);
+      alert(error)
+    }
   }
 
   return (
@@ -211,7 +224,7 @@ function Order({
       >
         Sell
       </button>
-      {!isOpen ? null :
+      {!isOpen ? null : (
         <div
           style={{
             position: "fixed",
@@ -223,21 +236,39 @@ function Order({
             zIndex: 1000,
             borderRadius: ".5rem",
             border: "2px black solid",
-          }}>
-          <p style={{ color: "#909090" }}>Purchase of {name}:<br />
-            {priced == "usd" ? <span>USD</span> : <span>ETH</span>}/${name}<br />
-            Token Amount:  ${orderAmount}<br />
-            Order Price:  ${orderPrice}<br />
-            Estimated Gas:  {quote}<br />
-            Transaction Fee:  ${orderCost?.fee}<br />
-            Order Total in USD:  ${orderCost?.orderTotal}<br />
-            Order Total in ETH:  {orderCost?.ethCost}<br />
-            **Due to exchange rates we hold additional Ethereum to complete your order**<br />
-            **Additional ethereum will be returned to you**<br />
-            **Please confirm your order.**</p>
-          <button type="button" onClick={postOrder}>Confirm</button>
-          <button type="button" onClick={() => setIsOpen(false)}>Cancel</button>
-        </div>}
+          }}
+        >
+          <p style={{ color: "#909090" }}>
+            Purchase of {name}:<br />
+            {priced == "usd" ? <span>USD</span> : <span>ETH</span>}/${name}
+            <br />
+            Token Amount: ${orderAmount}
+            <br />
+            Order Price: ${orderPrice}
+            <br />
+            Estimated Gas: {quote}
+            <br />
+            Transaction Fee: ${orderCost?.fee}
+            <br />
+            Order Total in USD: ${orderCost?.orderTotal}
+            <br />
+            Order Total in ETH: {orderCost?.ethCost}
+            <br />
+            **Due to exchange rates we hold additional Ethereum to complete your
+            order**
+            <br />
+            **Additional ethereum will be returned to you**
+            <br />
+            **Please confirm your order.**
+          </p>
+          <button type="button" onClick={postOrder}>
+            Confirm
+          </button>
+          <button type="button" onClick={() => setIsOpen(false)}>
+            Cancel
+          </button>
+        </div>
+      )}
     </form>
   );
 }
