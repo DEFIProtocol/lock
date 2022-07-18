@@ -1,71 +1,45 @@
 import React, { useEffect, useState } from "react";
 import { useMoralis } from "react-moralis";
-import Web3 from "web3";
+import { ethers } from "ethers";
 
-function TokenData({ contractAddress, contractABI, usdPrice }) {
-  const { Moralis } = useMoralis();
-  const [block, setBlock] = useState();
-  const [supply, setSupply] = useState();
-  const [price, setPrice] = useState(usdPrice);
-  const [marketCap, setMarketCap] = useState();
 
-  console.log(contractABI);
+function TokenData(address) {
+  const [tokenData, setTokenData] = useState();
+  const rpcURL = process.env.INFURA_RPC_NODE;
+  const provider = new ethers.providers.JsonRpcProvider(rpcURL);
+  const ERC20_ABI = [
+    "function name() view returns (string)",
+    "function symbol() view returns (string)",
+    "function decimals() view returns (uint8)",
+    "function totalSupply() view returns (uint256)",
+    //  "function balanceOf(address) view returns (uint256)",
+    //  "function transfer(address, uint256) returns (bool)",
+    //  "function transferFrom(address, address, uint256) returns (bool)",
+    //   "function approve(address, uint256) returns (bool)",
+  ]
 
-  const web3Node = async () => {
-    await Moralis.enableWeb3();
-    var web3 = new Web3(
-      new Web3.providers.HttpProvider(
-        "https://speedy-nodes-nyc.moralis.io/{}/eth/mainnet/archive",
-        { timeout: 100000 },
-      ),
-    );
-    try {
-      web3.eth.getBlockNumber().then((blockNumber) => {
-        setBlock(blockNumber);
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  const contract = new ethers.Contract(address.address, ERC20_ABI, provider);
 
-  useEffect(() => {
-    web3Node().then(
-      () => setPrice(usdPrice),
-      getTotalSupply(contractAddress, contractABI),
-    );
-  }, [contractAddress, contractABI]);
+  const marketCapitalization = async () => {
+    const totalSupply = await contract.totalSupply();
+    const symbol = await contract.symbol();
+    const name = await contract.name();
+    const decimals = await contract.decimals();
+    const supply = ethers.utils.formatUnits(totalSupply, decimals);
+    const marketCap = ethers.utils.formatEther(supply);
+    setTokenData({ marketCap, symbol, name, supply });
+  }
+  marketCapitalization();
+  console.log(tokenData)
 
-  const getTotalSupply = async () => {
-    var web3 = new Web3(
-      new Web3.providers.HttpProvider(
-        "https://speedy-nodes-nyc.moralis.io/{}/bsc/mainnet",
-        { timeout: 100000 },
-      ),
-    );
-    try {
-      var contract = await new web3.eth.Contract(contractABI, contractAddress);
-      contract.methods
-        .totalSupply()
-        .call({}, block)
-        .then((res) => {
-          var circulatingSupply = res / 1000000000000000000;
-          console.log(price);
-          console.log(usdPrice);
-          var mkCap = circulatingSupply * parseFloat(usdPrice);
-          setSupply(circulatingSupply.toLocaleString());
-          setMarketCap(mkCap.toLocaleString());
-        });
-    } catch (err) {
-      console.log(err);
-    }
-  };
+
 
   return (
     <div>
       <div>
         <div style={{ color: "lime", display: "block" }}>
           Total Supply
-          <div style={{ color: "lime" }}>{supply}</div>
+          <div style={{ color: "lime" }}></div>
         </div>
       </div>
       <div
@@ -76,7 +50,7 @@ function TokenData({ contractAddress, contractABI, usdPrice }) {
           left: "50%",
         }}
       >
-        <div>$ {marketCap}</div>
+        <div></div>
       </div>
     </div>
   );

@@ -183,6 +183,113 @@ function Token() {
 
   // AAVE address 0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae
 
+
+  // {!orders ? null : (
+  //  <Card
+  //    style={{
+  //      width: "55%",
+  //      margin: "5px",
+  //      padding: "10px",
+  //      float: "left",
+  //      border: "1px solid #202020",
+  //      borderRadius: "0.5rem",
+  //      backgroundColor: "#202020",
+  //      position: "relative",
+  //    }}
+  //  >
+  //    <Title level={3} style={{ color: "lime", margin: "0px auto" }}>
+  //      Active Orders
+  //    </Title>
+  //    <div style={{ width: "100%" }}>
+  //      <span
+  //        style={{
+  //          float: "left",
+  //          marginRight: "8.25%",
+  //          color: "lime",
+  //          display: "block",
+  //        }}
+  //      >
+  //        Qty
+  //      </span>
+  //      <span
+  //        style={{
+  //          float: "left",
+  //          marginRight: "8.25%",
+  //          color: "lime",
+  //          display: "block",
+  //        }}
+  //      >
+  //        Type
+  //      </span>
+  //      <span
+  //        style={{
+  //          float: "left",
+  //          marginRight: "8.25%",
+  //          color: "lime",
+  //          display: "block",
+  //        }}
+  //      >
+  //        Token
+  //      </span>
+  //      <span
+  //        style={{
+  //          float: "left",
+  //          marginRight: "8.25%",
+  //          color: "lime",
+  //          display: "block",
+  //        }}
+  //      >
+  //        Exuection Price
+  //      </span>
+  //      <span
+  //        style={{
+  //          float: "left",
+  //          marginRight: "8.25%",
+  //          color: "lime",
+  //          display: "block",
+  //        }}
+  //      >
+  //        Total Cost
+  //      </span>
+  //    </div>
+  //    {Object.keys(orders).map((order, index) => (
+  //      <div>
+  //        <Card key={index} style={{ backgroundColor: "#909090" }}>
+  //          <span
+  //            style={{
+  //              float: "left",
+  //              color: "black",
+  //              marginRight: "8.25%",
+  //            }}
+  //          >
+  //            {orders[order].orderAmount}
+  //          </span>
+  //          <span style={{ color: "black", marginRight: "8.25%" }}>
+  //            {orders[order].order}
+  //          </span>
+  //          <span style={{ color: "black", marginRight: "8.25%" }}>
+  //            {orders[order].tokenName}
+  //          </span>
+  //          <span style={{ color: "black", marginRight: "8.25%" }}>
+  //            {orders[order].exuectionPrice}
+  //          </span>
+  //          <span style={{ color: "black", marginRight: "8.25%" }}>
+  //            {orders[order].orderTotal}
+  //          </span>
+  //          <button
+  //            onClick={() =>
+  //              cancelOrder(orders[order].orderTotal).then(() =>
+  //                cancelUserOrder(order),
+  //              )
+  //            }
+  //          >
+  //            Cancel
+  //          </button>
+  //        </Card>
+  //      </div>
+  //    ))}
+  //  </Card>
+  //)} 
   return (
     <div
       style={{
@@ -310,15 +417,13 @@ function Token() {
         }}
       >
         <TokenData
-          contractAddress={tokenMetaData?.contractAddress}
-          contractABI={tokenMetaData?.contractABI}
-          usdPrice={tokenPrice}
+          address={address}
         />
       </Card>
 
       {!tokenMetaData?.ProfilePic &&
-      !tokenMetaData?.Video &&
-      !tokenMetaData?.Pictures ? null : (
+        !tokenMetaData?.Video &&
+        !tokenMetaData?.Pictures ? null : (
         <Card
           style={{
             width: "43%",
@@ -400,112 +505,6 @@ function Token() {
         </Card>
       )}
 
-      {!orders ? null : (
-        <Card
-          style={{
-            width: "55%",
-            margin: "5px",
-            padding: "10px",
-            float: "left",
-            border: "1px solid #202020",
-            borderRadius: "0.5rem",
-            backgroundColor: "#202020",
-            position: "relative",
-          }}
-        >
-          <Title level={3} style={{ color: "lime", margin: "0px auto" }}>
-            Active Orders
-          </Title>
-          <div style={{ width: "100%" }}>
-            <span
-              style={{
-                float: "left",
-                marginRight: "8.25%",
-                color: "lime",
-                display: "block",
-              }}
-            >
-              Qty
-            </span>
-            <span
-              style={{
-                float: "left",
-                marginRight: "8.25%",
-                color: "lime",
-                display: "block",
-              }}
-            >
-              Type
-            </span>
-            <span
-              style={{
-                float: "left",
-                marginRight: "8.25%",
-                color: "lime",
-                display: "block",
-              }}
-            >
-              Token
-            </span>
-            <span
-              style={{
-                float: "left",
-                marginRight: "8.25%",
-                color: "lime",
-                display: "block",
-              }}
-            >
-              Exuection Price
-            </span>
-            <span
-              style={{
-                float: "left",
-                marginRight: "8.25%",
-                color: "lime",
-                display: "block",
-              }}
-            >
-              Total Cost
-            </span>
-          </div>
-          {Object.keys(orders).map((order, index) => (
-            <div>
-              <Card key={index} style={{ backgroundColor: "#909090" }}>
-                <span
-                  style={{
-                    float: "left",
-                    color: "black",
-                    marginRight: "8.25%",
-                  }}
-                >
-                  {orders[order].orderAmount}
-                </span>
-                <span style={{ color: "black", marginRight: "8.25%" }}>
-                  {orders[order].order}
-                </span>
-                <span style={{ color: "black", marginRight: "8.25%" }}>
-                  {orders[order].tokenName}
-                </span>
-                <span style={{ color: "black", marginRight: "8.25%" }}>
-                  {orders[order].exuectionPrice}
-                </span>
-                <span style={{ color: "black", marginRight: "8.25%" }}>
-                  {orders[order].orderTotal}
-                </span>
-                <button
-                  onClick={() =>
-                    cancelOrder(orders[order].orderTotal).then(() =>
-                      cancelUserOrder(order),
-                    )
-                  }
-                >
-                  Cancel
-                </button>
-              </Card>
-            </div>
-          ))}
-        </Card>
-      )}
 
       <Card
         style={{

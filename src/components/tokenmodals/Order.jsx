@@ -12,13 +12,14 @@ function Order({
   ethValue,
   renderOrder,
 }) {
-  const { Moralis, isInitialized } = useMoralis();
+  const { Moralis, isInitialized, isAuthenticated } = useMoralis();
   const { getQuote } = useInchDex();
   const [orderPrice, setOrderPrice] = useState("");
   const [orderAmount, setOrderAmount] = useState();
   const [orderCost, setOrderCost] = useState();
   const [quote, setQuote] = useState();
   const [priced, setPriced] = useState("usd");
+  const [ord, setOrd] = useState();
   const [BuyOrSell, setbuyOrSell] = useState();
   const [isOpen, setIsOpen] = useState(false);
   // var ethMultiplier = 1 / ethValue;
@@ -113,40 +114,56 @@ function Order({
     setOrderCost(orderDetails);
   };
 
-  const postOrder = async () => {
+  const userRelation = async () => {
+    if (!isAuthenticated) return null; // add redirect or error with error saying need to authenticate
+    var order = await postOrder(
+      orderAmount,
+      priced,
+      name,
+      address,
+      orderCost.orderTotal,
+      orderPrice,
+      orderCost.fee,
+      quote,
+      BuyOrSell,
+      orderCost.ethCost)
+    console.log(order);
+    try {
+      const orders = Moralis.Object.extend('Orders')
+      const user = Moralis.User.current();
+      const relation = user.relation(orders);
+      console.log(relation);
+      console.log(user)
+      console.log(order)
+      user.set("orders", order);
+      user.save();
+      () => setIsOpen(false);
+    } catch (error) {
+      alert(error)
+    }
+  }
+
+  const postOrder = async (amount, denominated, Name, add, total, exuecution, fee, gas, orderType, ethTotal) => {
     try {
       const orders = Moralis.Object.extend("Orders");
       const order = new orders();
-      order.set("orderAmount", orderAmount);
-      order.set("priced", priced);
-      order.set("tokenName", name);
-      order.set("address", address);
-      order.set("orderTotal", orderCost.orderTotal);
-      order.set("exuecutionPrice", orderPrice);
-      order.set("transactionFee", orderCost.fee);
-      order.set("estimatedGas", quote);
-      order.set("order", BuyOrSell);
-      order.set("ethCost", orderCost.ethCost);
-      userRelation(order);
+      order.set("orderAmount", amount);
+      order.set("priced", denominated);
+      order.set("tokenName", Name);
+      order.set("address", add);
+      order.set("orderTotal", total);
+      order.set("exuecutionPrice", exuecution);
+      order.set("transactionFee", fee);
+      order.set("estimatedGas", gas);
+      order.set("order", orderType);
+      order.set("ethCost", ethTotal);
       await order.save();
+      return order;
     } catch (error) {
       console.log(error);
     }
     renderOrder();
   };
-
-  const userRelation = async (order) => {
-    console.log(order.id)
-    try {
-      const user = Moralis.User.current();
-      const relation = user.relation("Orders");
-      relation.add("Orders", order.id);
-      await user.save();
-    } catch (error) {
-      console.log(error);
-      alert(error)
-    }
-  }
 
   return (
     <form>
@@ -261,7 +278,7 @@ function Order({
             <br />
             **Please confirm your order.**
           </p>
-          <button type="button" onClick={postOrder}>
+          <button type="button" onClick={() => userRelation()}>
             Confirm
           </button>
           <button type="button" onClick={() => setIsOpen(false)}>
