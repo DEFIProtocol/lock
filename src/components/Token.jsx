@@ -136,7 +136,7 @@ function Token() {
     }
   }, [isAuthenticated]);
 
-  // cancel order
+  // cancel order change to cancel pointer
   const cancelOrder = async (orderTotal) => {
     const orders = Moralis.Object.extend("Orders");
     const query = new Moralis.Query(orders);
@@ -161,28 +161,10 @@ function Token() {
     }
   };
 
-  // update description
-  const updateWebsite = () => {
-    var website = prompt("Company Url");
-    if (website != null) {
-      updateAccountWebsite(website).then(
-        alert("Your organization description has been changed!"),
-      );
-    }
-  };
+  console.log(tokenPrice);
 
-  const updateAccountWebsite = async (website) => {
-    const tokens = Moralis.Object.extend("Tokens");
-    const query = new Moralis.Query(tokens);
-    query.equalTo("Address", `${address}`);
-    const updateToken = await query.first();
-    updateToken.set("Website", website);
-    await updateToken.save();
-    return updateToken.then(getTokens());
-  };
 
   // AAVE address 0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae
-
 
   // {!orders ? null : (
   //  <Card
@@ -289,7 +271,7 @@ function Token() {
   //      </div>
   //    ))}
   //  </Card>
-  //)} 
+  //)}
   return (
     <div
       style={{
@@ -417,7 +399,9 @@ function Token() {
         }}
       >
         <TokenData
-          address={address}
+          price={tokenPrice}
+          contractAddress={tokenMetaData?.contractAddress}
+          ethValue={ethValue}
         />
       </Card>
 
@@ -504,7 +488,6 @@ function Token() {
           ) : null}
         </Card>
       )}
-
 
       <Card
         style={{

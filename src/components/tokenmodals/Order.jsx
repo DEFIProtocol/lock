@@ -67,17 +67,17 @@ function Order({
     var currentTrade =
       buyOrSell == "buy"
         ? {
-          fromToken: fromToken,
-          toToken: toToken,
-          fromAmount: orderAmount,
-          chain: chain,
-        }
+            fromToken: fromToken,
+            toToken: toToken,
+            fromAmount: orderAmount,
+            chain: chain,
+          }
         : {
-          fromToken: fromToken,
-          toToken: toToken,
-          fromAmount: orderAmount,
-          chain: chain,
-        };
+            fromToken: fromToken,
+            toToken: toToken,
+            fromAmount: orderAmount,
+            chain: chain,
+          };
     try {
       var gas = await getQuote(currentTrade);
       var ethGas = `${gas?.estimatedGas} WEI`;
@@ -95,12 +95,12 @@ function Order({
     var ethCost =
       priced == "usd"
         ? (ethValue * orderAmount * 1.01) /*+ decQuote*/
-          .toLocaleString() // buy or sell token in usd
+            .toLocaleString() // buy or sell token in usd
         : orderValue * 1.01; /*+ decQuote*/ // buy or sell token in eth
     var orderTotal =
       priced == "usd"
         ? (orderValue * 1.01) /* (decQuote * (ethValue / price))*/
-          .toLocaleString() // buy or sell token in usd
+            .toLocaleString() // buy or sell token in usd
         : ethCost * (price / ethValue); /* (decQuote * (ethValue / price))*/ // buy or sell token in eth
     var fee =
       priced == "usd"
@@ -126,24 +126,36 @@ function Order({
       orderCost.fee,
       quote,
       BuyOrSell,
-      orderCost.ethCost)
+      orderCost.ethCost,
+    );
     console.log(order);
     try {
-      const orders = Moralis.Object.extend('Orders')
+      const orders = Moralis.Object.extend("Orders");
       const user = Moralis.User.current();
       const relation = user.relation(orders);
       console.log(relation);
-      console.log(user)
-      console.log(order)
+      console.log(user);
+      console.log(order);
       user.set("orders", order);
       user.save();
       () => setIsOpen(false);
     } catch (error) {
-      alert(error)
+      alert(error);
     }
-  }
+  };
 
-  const postOrder = async (amount, denominated, Name, add, total, exuecution, fee, gas, orderType, ethTotal) => {
+  const postOrder = async (
+    amount,
+    denominated,
+    Name,
+    add,
+    total,
+    exuecution,
+    fee,
+    gas,
+    orderType,
+    ethTotal,
+  ) => {
     try {
       const orders = Moralis.Object.extend("Orders");
       const order = new orders();

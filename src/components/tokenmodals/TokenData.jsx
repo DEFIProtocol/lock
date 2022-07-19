@@ -1,12 +1,26 @@
-import React, { useEffect, useState } from "react";
-import { useMoralis } from "react-moralis";
+import React, { useState } from "react";
 import { ethers } from "ethers";
+import { useEffect } from "react";
+import { Typography } from "antd";
 
+const styles = {
+  chartheader: {
+    display: "flex",
+    justifyContent: "space-between",
+    color: "lime",
+    height: "100%",
+  },
+  charttitle: {
+    color: "lime",
+  },
+};
 
-function TokenData(address) {
+function TokenData({ price, contractAddress, ethValue }) {
   const [tokenData, setTokenData] = useState();
-  const rpcURL = process.env.INFURA_RPC_NODE;
-  const provider = new ethers.providers.JsonRpcProvider(rpcURL);
+
+  const address = "0x626E8036dEB333b408Be468F951bdB42433cBF18";
+  const rpcURL = process.env.INFURA_API_KEY;
+  const provider = new ethers.providers.InfuraProvider('mainnet', rpcURL);
   const ERC20_ABI = [
     "function name() view returns (string)",
     "function symbol() view returns (string)",
@@ -18,28 +32,53 @@ function TokenData(address) {
     //   "function approve(address, uint256) returns (bool)",
   ]
 
-  const contract = new ethers.Contract(address.address, ERC20_ABI, provider);
+
+  const contract = new ethers.Contract(address, ERC20_ABI, provider);
+  console.log(contract)
 
   const marketCapitalization = async () => {
-    const totalSupply = await contract.totalSupply();
-    const symbol = await contract.symbol();
     const name = await contract.name();
-    const decimals = await contract.decimals();
-    const supply = ethers.utils.formatUnits(totalSupply, decimals);
-    const marketCap = ethers.utils.formatEther(supply);
-    setTokenData({ marketCap, symbol, name, supply });
+    const symbol = await contract.symbol();
+    const totalSupply = await contract.totalSupply();
+    const supply = await ethers.utils.formatEther(totalSupply);
+    setTokenData({ symbol: symbol, name: name, supply: supply, price: price });
+    return { symbol: symbol, name: name, supply: supply };
   }
-  marketCapitalization();
-  console.log(tokenData)
 
+  useEffect(() => {
+    marketCapitalization();
+  }, [])
 
-
+  console.log(tokenData.symbol);
+  if (tokenData == null) return "loading";
   return (
-    <div>
+    <>
       <div>
+        <img
+          src={tokenData.symbol}
+          style={{
+            height: "50px",
+            width: "50px",
+            marginRight: "20px",
+            float: "left",
+          }}
+          alt="No Logo"
+        />
+        <Typography.Title level={4} style={styles.charttitle}>
+          {tokenData.name}
+        </Typography.Title>
+        <Typography.Title level={5} style={styles.charttitle}>
+          Current Price: ${price}
+        </Typography.Title>
+        <Typography.Title
+          level={5}
+          style={{ marginLeft: "30%", color: "lime" }}
+        >
+          ETH/{tokenData.name} : {ethValue}
+        </Typography.Title>
         <div style={{ color: "lime", display: "block" }}>
           Total Supply
-          <div style={{ color: "lime" }}></div>
+          <div style={{ color: "lime" }}>{tokenData.supply}</div>
         </div>
       </div>
       <div
@@ -50,9 +89,9 @@ function TokenData(address) {
           left: "50%",
         }}
       >
-        <div></div>
+        <div>{tokenData.supply * price}</div>
       </div>
-    </div>
+    </>
   );
 }
 
