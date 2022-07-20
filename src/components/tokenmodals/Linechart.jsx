@@ -128,18 +128,6 @@ export const LineChart = ({
             }}
             alt="No Logo"
           />
-          <Typography.Title level={4} style={styles.charttitle}>
-            {tokenName}
-          </Typography.Title>
-          <Typography.Title level={5} style={styles.charttitle}>
-            Current Price: ${currentPrice}
-          </Typography.Title>
-          <Typography.Title
-            level={5}
-            style={{ marginLeft: "30%", color: "lime" }}
-          >
-            ETH/{tokenName} : {ethValue}
-          </Typography.Title>
           <Select
             style={{ marginLeft: "70%" }}
             defaultValue="7"

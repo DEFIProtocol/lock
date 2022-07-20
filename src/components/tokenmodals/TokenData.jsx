@@ -2,25 +2,28 @@ import React, { useState } from "react";
 import { ethers } from "ethers";
 import { useEffect } from "react";
 import { Typography } from "antd";
+//const styles = {
+//  chartheader: {
+//    display: "flex",
+//    color: "black",
+//  },
+//  charttitle: {
+//    color: "black",
+//    justifyContent: "spacebetween",
+//    display: "flex",
+//    position: "absolute",
+//    left: "40%",
+//    top: "20%",
+//    marginRight: "17%",
+//  }
+//};
 
-const styles = {
-  chartheader: {
-    display: "flex",
-    justifyContent: "space-between",
-    color: "lime",
-    height: "100%",
-  },
-  charttitle: {
-    color: "lime",
-  },
-};
-
-function TokenData({ price, contractAddress, ethValue }) {
+function TokenData({ price, contractAddress, ethValue, logo }) {
   const [tokenData, setTokenData] = useState();
 
   const address = "0x626E8036dEB333b408Be468F951bdB42433cBF18";
   const rpcURL = process.env.INFURA_API_KEY;
-  const provider = new ethers.providers.InfuraProvider('mainnet', rpcURL);
+  const provider = new ethers.providers.InfuraProvider("mainnet", rpcURL);
   const ERC20_ABI = [
     "function name() view returns (string)",
     "function symbol() view returns (string)",
@@ -30,66 +33,115 @@ function TokenData({ price, contractAddress, ethValue }) {
     //  "function transfer(address, uint256) returns (bool)",
     //  "function transferFrom(address, address, uint256) returns (bool)",
     //   "function approve(address, uint256) returns (bool)",
-  ]
-
+  ];
 
   const contract = new ethers.Contract(address, ERC20_ABI, provider);
-  console.log(contract)
+  console.log(contractAddress);
+  console.log(address);
 
   const marketCapitalization = async () => {
     const name = await contract.name();
     const symbol = await contract.symbol();
     const totalSupply = await contract.totalSupply();
     const supply = await ethers.utils.formatEther(totalSupply);
-    setTokenData({ symbol: symbol, name: name, supply: supply, price: price });
-    return { symbol: symbol, name: name, supply: supply };
-  }
+    setTokenData({ symbol: symbol, name: name, supply: supply.toLocaleString(), price: price });
+    return {
+      symbol: symbol,
+      name: name,
+      supply: supply
+    };
+  };
+  console.log(parseFloat(ethValue))
+  console.log(parseInt(ethValue).toFixed(18))
 
   useEffect(() => {
     marketCapitalization();
-  }, [])
+  }, []);
 
-  console.log(tokenData.symbol);
+  console.log(ethValue);
+
   if (tokenData == null) return "loading";
   return (
     <>
-      <div>
+      <div
+        style={{
+          height: "100%",
+          width: "100%",
+          display: "flex",
+          textAlign: "left",
+          cursor: "pointer",
+          position: "absolute",
+          top: "10px",
+        }}>
         <img
-          src={tokenData.symbol}
+          src={logo}
           style={{
-            height: "50px",
-            width: "50px",
-            marginRight: "20px",
+            height: "10vh",
+            width: "10vh",
             float: "left",
+            marginRight: "2vw",
+            alignSelf: "left",
+
           }}
           alt="No Logo"
         />
-        <Typography.Title level={4} style={styles.charttitle}>
+        <Typography.Title level={5} style={{ float: "left", marginRight: "5vw", textAlign: "center", marginTop: "3vh" }} >
           {tokenData.name}
         </Typography.Title>
-        <Typography.Title level={5} style={styles.charttitle}>
-          Current Price: ${price}
-        </Typography.Title>
-        <Typography.Title
-          level={5}
-          style={{ marginLeft: "30%", color: "lime" }}
-        >
-          ETH/{tokenData.name} : {ethValue}
-        </Typography.Title>
-        <div style={{ color: "lime", display: "block" }}>
-          Total Supply
-          <div style={{ color: "lime" }}>{tokenData.supply}</div>
+        <div
+          style={{
+            float: "left",
+            left: "35%",
+            textAlign: "center",
+            marginTop: "1.5vh",
+            fontWeight: "bold",
+            position: "absolute",
+          }}>
+          USD <br />
+          ${!price ? null :
+            price.toLocaleString()}
         </div>
-      </div>
-      <div
-        style={{
-          display: "block",
-          color: "lime",
-          position: "absolute",
-          left: "50%",
-        }}
-      >
-        <div>{tokenData.supply * price}</div>
+        <div
+          style={{
+            float: "left",
+            left: "45%",
+            textAlign: "center",
+            marginTop: "1.5vh",
+            fontWeight: "bold",
+            position: "absolute",
+          }}
+        >
+          ETH<br />
+          {!ethValue ? null :
+            parseFloat(ethValue) < .000001 ?
+              ethValue * (10 ** 18) + "(WEI)" :
+              parseFloat(ethValue).toFixed(7)
+          }
+        </div>
+        <div
+          style={{
+            float: "left",
+            left: "60%",
+            textAlign: "center",
+            marginTop: "1.5vh",
+            fontWeight: "bold",
+            position: "absolute",
+          }}>
+          Supply<br />
+          {tokenData.supply}
+        </div>
+        <div
+          style={{
+            float: "right",
+            left: "75%",
+            textAlign: "center",
+            marginTop: "1.5vh",
+            fontWeight: "bold",
+            position: "absolute",
+          }}>
+          MarketCap<br />
+          {(tokenData.supply * price).toLocaleString()}
+        </div>
       </div>
     </>
   );

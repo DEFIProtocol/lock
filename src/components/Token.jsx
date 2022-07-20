@@ -163,7 +163,6 @@ function Token() {
 
   console.log(tokenPrice);
 
-
   // AAVE address 0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae
 
   // {!orders ? null : (
@@ -278,10 +277,26 @@ function Token() {
         backgroundColor: "black",
         color: "lime",
         width: "100%",
-        marginTop: "10px",
         display: "block",
       }}
     >
+      <Card
+        style={{
+          height: "15vh",
+          width: "100%",
+          margin: "0px 0px",
+          border: "1px solid #202020",
+          borderRadius: "0.5rem",
+          backgroundColor: "lime",
+        }}
+      >
+        <TokenData
+          price={tokenPrice}
+          contractAddress={tokenMetaData?.contractAddress}
+          ethValue={ethValue}
+          logo={tokenMetaData?.Logo}
+        />
+      </Card>
       <Card
         style={{
           width: "43%",
@@ -328,12 +343,12 @@ function Token() {
           />
         )}
         <LineChart
-          logo={tokenMetaData?.Logo}
           address={address}
           currentPrice={tokenPrice}
           ethValue={ethValue}
           tokenName={tokenMetaData?.Name}
           chain={tokenMetaData?.Chain}
+          logo={tokenMetaData?.Logo}
         />
       </Card>
 
@@ -374,7 +389,7 @@ function Token() {
           border: "1px solid #202020",
         }}
       >
-        <Title level={3} style={{ color: "lime", margin: "0px auto" }}>
+        <Title level={3} style={{ color: "lime", margin: "0px" }}>
           Website
         </Title>
         <a style={{ color: "lime" }} href={tokenMetaData?.Website}>
@@ -385,24 +400,6 @@ function Token() {
             <UpdateWebsite address={address} render={() => getTokens()} />
           ) : null}
         </span>
-      </Card>
-
-      <Card
-        style={{
-          width: "55%",
-          margin: "5px",
-          padding: "10px",
-          float: "left",
-          border: "1px solid #202020",
-          borderRadius: "0.5rem",
-          backgroundColor: "#202020",
-        }}
-      >
-        <TokenData
-          price={tokenPrice}
-          contractAddress={tokenMetaData?.contractAddress}
-          ethValue={ethValue}
-        />
       </Card>
 
       {!tokenMetaData?.ProfilePic &&
