@@ -1,33 +1,22 @@
+
+
+// favorites list into one component
+
 import { Link } from "react-router-dom";
 import { Card } from "antd";
 import { StarOutlined, StarFilled } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
-import { useMoralis, useMoralisCloudFunction } from "react-moralis";
+import { useMoralis } from "react-moralis";
+import useERC20Tokens from "hooks/useERC20Tokens";
 
 //useMoralisQuery
 function ETHDEX() {
   const { Moralis, isAuthenticated } = useMoralis();
-  const [tokens, setTokens] = useState();
+  const { tokens } = useERC20Tokens();
   const [watchlist, setWatchlist] = useState([]);
   const [query, setQuery] = useState("");
-  const { fetch } = useMoralisCloudFunction(
-    "getTokens",
-    { token: "sum" },
-    { autoFetch: false },
-  );
 
-  const getTokens = async () => {
-    if (!Moralis) return null;
-    fetch({
-      onSuccess: (sum) => setTokens(sum),
-      onError: (error) => console.log(error),
-    });
-  };
   console.log(tokens);
-
-  useEffect(() => {
-    getTokens();
-  }, []);
 
   const getFavorites = async () => {
     if (!isAuthenticated) return null;

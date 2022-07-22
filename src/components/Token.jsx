@@ -344,11 +344,7 @@ function Token() {
         )}
         <LineChart
           address={address}
-          currentPrice={tokenPrice}
-          ethValue={ethValue}
-          tokenName={tokenMetaData?.Name}
           chain={tokenMetaData?.Chain}
-          logo={tokenMetaData?.Logo}
         />
       </Card>
 

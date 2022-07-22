@@ -1,3 +1,10 @@
+
+
+// fix contractAddress input not being read
+// set up on hover additional details for
+
+
+
 import React, { useState } from "react";
 import { ethers } from "ethers";
 import { useEffect } from "react";
@@ -113,7 +120,7 @@ function TokenData({ price, contractAddress, ethValue, logo }) {
         >
           ETH<br />
           {!ethValue ? null :
-            parseFloat(ethValue) < .000001 ?
+            parseFloat(ethValue) < .00001 ?
               ethValue * (10 ** 18) + "(WEI)" :
               parseFloat(ethValue).toFixed(7)
           }

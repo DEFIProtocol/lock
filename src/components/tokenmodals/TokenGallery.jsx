@@ -1,3 +1,9 @@
+
+
+// fix picture index
+// center photo gallery and enlarge
+
+
 import React, { useEffect, useState } from "react";
 import { Image } from "cloudinary-react";
 import { useMoralis } from "react-moralis";
@@ -11,17 +17,11 @@ function TokenGallery({ open, onClose, address, pictures, render }) {
   const [updatePhotos, setUpdatePhotos] = useState("profilePic");
   const [pictureArray, setPictureArray] = useState();
 
-  const reversePictures = () => {
-    setPictureArray(pictures.slice(0).reverse());
-  };
-
-  useEffect(() => {
-    reversePictures();
-  }, []);
 
   useEffect(() => {
     if (isAuthenticated) {
       setUserAddress(user.attributes.ethAddress);
+      setPictureArray(pictures.slice(0).reverse());
     }
   }, [isAuthenticated]);
 
@@ -31,7 +31,9 @@ function TokenGallery({ open, onClose, address, pictures, render }) {
     } else if (slideIndex === 1) {
       setSlideIndex(pictureArray.length);
     }
+    console.log(slideIndex);
   };
+
 
   const next = () => {
     if (slideIndex !== pictureArray.length) {
@@ -39,6 +41,7 @@ function TokenGallery({ open, onClose, address, pictures, render }) {
     } else if (slideIndex === pictureArray.length) {
       setSlideIndex(1);
     }
+    console.log(slideIndex);
   };
 
   const save = async (photo) => {
@@ -58,7 +61,17 @@ function TokenGallery({ open, onClose, address, pictures, render }) {
 
   if (!open) return null;
   return (
-    <div style={{ margin: "0px auto", align: "center" }}>
+    <div
+      style={{
+        border: "2px black solid",
+        position: "fixed",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        backgroundColor: "#202020",
+        padding: "50px",
+        zIndex: 1000,
+      }}>
       <h1 style={{ color: "#909090", align: "center" }}>DAO Gallery</h1>
       <Image
         publicId={pictureArray[slideIndex]}
@@ -86,6 +99,7 @@ function TokenGallery({ open, onClose, address, pictures, render }) {
             backgroundColor: "black",
             color: "DeepSkyBlue",
             align: "center",
+            borderRadius: ".5rem",
           }}
         >
           <select

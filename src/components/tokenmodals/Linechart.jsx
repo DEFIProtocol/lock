@@ -1,3 +1,9 @@
+
+
+// fix price calls 
+// make sure pricing is accurate
+// fix timeperiod change
+
 import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import { Row, Typography, Select } from "antd";
@@ -118,16 +124,6 @@ export const LineChart = ({
     <>
       <Row style={styles.chartheader}>
         <div style={{ display: "inline-block", width: "100%" }}>
-          <img
-            src={logo}
-            style={{
-              height: "50px",
-              width: "50px",
-              marginRight: "20px",
-              float: "left",
-            }}
-            alt="No Logo"
-          />
           <Select
             style={{ marginLeft: "70%" }}
             defaultValue="7"
