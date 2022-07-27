@@ -1,6 +1,4 @@
-
-
-// fix price calls 
+// fix price calls
 // make sure pricing is accurate
 // fix timeperiod change
 
@@ -42,10 +40,7 @@ const styles = {
   },
 };
 
-export const LineChart = ({
-  address,
-  chain,
-}) => {
+export const LineChart = ({ address, chain }) => {
   const { Moralis } = useMoralis();
   const [price, setPrice] = useState();
   const [timeperiod, setTimeperiod] = useState("7");

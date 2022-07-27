@@ -136,8 +136,6 @@ function Token() {
     }
   }, [isAuthenticated]);
 
-
-
   // AAVE address 0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae
 
   return (
@@ -214,20 +212,19 @@ function Token() {
         <LineChart address={address} chain={tokenMetaData?.Chain} />
       </Card>
 
-      <Card style={{
-        width: "55%",
-        margin: "5px",
-        padding: "10px",
-        float: "left",
-        border: "1px solid #202020",
-        borderRadius: "0.5rem",
-        backgroundColor: "#909090",
-        position: "relative",
-      }}
+      <Card
+        style={{
+          width: "55%",
+          margin: "5px",
+          padding: "10px",
+          float: "left",
+          border: "1px solid #202020",
+          borderRadius: "0.5rem",
+          backgroundColor: "#909090",
+          position: "relative",
+        }}
       >
-        <ActiveOrder
-          objectID={orders}
-        />
+        <ActiveOrder objectID={orders} />
       </Card>
 
       <Card
@@ -281,8 +278,8 @@ function Token() {
       </Card>
 
       {!tokenMetaData?.ProfilePic &&
-        !tokenMetaData?.Video &&
-        !tokenMetaData?.Pictures ? null : (
+      !tokenMetaData?.Video &&
+      !tokenMetaData?.Pictures ? null : (
         <Card
           style={{
             width: "43%",
