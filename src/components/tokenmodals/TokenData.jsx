@@ -1,9 +1,5 @@
-
-
 // fix contractAddress input not being read
 // set up on hover additional details for
-
-
 
 import React, { useState } from "react";
 import { ethers } from "ethers";
@@ -51,15 +47,20 @@ function TokenData({ price, contractAddress, ethValue, logo }) {
     const symbol = await contract.symbol();
     const totalSupply = await contract.totalSupply();
     const supply = await ethers.utils.formatEther(totalSupply);
-    setTokenData({ symbol: symbol, name: name, supply: supply.toLocaleString(), price: price });
+    setTokenData({
+      symbol: symbol,
+      name: name,
+      supply: supply.toLocaleString(),
+      price: price,
+    });
     return {
       symbol: symbol,
       name: name,
-      supply: supply
+      supply: supply,
     };
   };
-  console.log(parseFloat(ethValue))
-  console.log(parseInt(ethValue).toFixed(18))
+  console.log(parseFloat(ethValue));
+  console.log(parseInt(ethValue).toFixed(18));
 
   useEffect(() => {
     marketCapitalization();
@@ -79,7 +80,8 @@ function TokenData({ price, contractAddress, ethValue, logo }) {
           cursor: "pointer",
           position: "absolute",
           top: "10px",
-        }}>
+        }}
+      >
         <img
           src={logo}
           style={{
@@ -88,11 +90,18 @@ function TokenData({ price, contractAddress, ethValue, logo }) {
             float: "left",
             marginRight: "2vw",
             alignSelf: "left",
-
           }}
           alt="No Logo"
         />
-        <Typography.Title level={5} style={{ float: "left", marginRight: "5vw", textAlign: "center", marginTop: "3vh" }} >
+        <Typography.Title
+          level={5}
+          style={{
+            float: "left",
+            marginRight: "5vw",
+            textAlign: "center",
+            marginTop: "3vh",
+          }}
+        >
           {tokenData.name}
         </Typography.Title>
         <div
@@ -103,10 +112,9 @@ function TokenData({ price, contractAddress, ethValue, logo }) {
             marginTop: "1.5vh",
             fontWeight: "bold",
             position: "absolute",
-          }}>
-          USD <br />
-          ${!price ? null :
-            price.toLocaleString()}
+          }}
+        >
+          USD <br />${!price ? null : price.toLocaleString()}
         </div>
         <div
           style={{
@@ -118,12 +126,13 @@ function TokenData({ price, contractAddress, ethValue, logo }) {
             position: "absolute",
           }}
         >
-          ETH<br />
-          {!ethValue ? null :
-            parseFloat(ethValue) < .00001 ?
-              ethValue * (10 ** 18) + "(WEI)" :
-              parseFloat(ethValue).toFixed(7)
-          }
+          ETH
+          <br />
+          {!ethValue
+            ? null
+            : parseFloat(ethValue) < 0.00001
+            ? ethValue * 10 ** 18 + "(WEI)"
+            : parseFloat(ethValue).toFixed(7)}
         </div>
         <div
           style={{
@@ -133,8 +142,10 @@ function TokenData({ price, contractAddress, ethValue, logo }) {
             marginTop: "1.5vh",
             fontWeight: "bold",
             position: "absolute",
-          }}>
-          Supply<br />
+          }}
+        >
+          Supply
+          <br />
           {tokenData.supply}
         </div>
         <div
@@ -145,8 +156,10 @@ function TokenData({ price, contractAddress, ethValue, logo }) {
             marginTop: "1.5vh",
             fontWeight: "bold",
             position: "absolute",
-          }}>
-          MarketCap<br />
+          }}
+        >
+          MarketCap
+          <br />
           {(tokenData.supply * price).toLocaleString()}
         </div>
       </div>

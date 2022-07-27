@@ -1,8 +1,5 @@
-
-
 // fix picture index
 // center photo gallery and enlarge
-
 
 import React, { useEffect, useState } from "react";
 import { Image } from "cloudinary-react";
@@ -16,7 +13,6 @@ function TokenGallery({ open, onClose, address, pictures, render }) {
   const [userAddress, setUserAddress] = useState();
   const [updatePhotos, setUpdatePhotos] = useState("profilePic");
   const [pictureArray, setPictureArray] = useState();
-
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -33,7 +29,6 @@ function TokenGallery({ open, onClose, address, pictures, render }) {
     }
     console.log(slideIndex);
   };
-
 
   const next = () => {
     if (slideIndex !== pictureArray.length) {
@@ -71,7 +66,8 @@ function TokenGallery({ open, onClose, address, pictures, render }) {
         backgroundColor: "#202020",
         padding: "50px",
         zIndex: 1000,
-      }}>
+      }}
+    >
       <h1 style={{ color: "#909090", align: "center" }}>DAO Gallery</h1>
       <Image
         publicId={pictureArray[slideIndex]}

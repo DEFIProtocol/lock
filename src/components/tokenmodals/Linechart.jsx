@@ -6,7 +6,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
-import { Row, Typography, Select } from "antd";
+import { Row, Select } from "antd";
 import moment from "moment";
 import { useMoralis } from "react-moralis";
 import {
@@ -43,12 +43,8 @@ const styles = {
 };
 
 export const LineChart = ({
-  logo,
   address,
   chain,
-  tokenName,
-  currentPrice,
-  ethValue,
 }) => {
   const { Moralis } = useMoralis();
   const [price, setPrice] = useState();

@@ -1,14 +1,10 @@
-import {
-  useMoralis,
-  useERC20Balances,
-} from "react-moralis";
+import { useMoralis, useERC20Balances } from "react-moralis";
 import { Skeleton, Table, Card } from "antd";
 import { StarFilled, StarOutlined } from "@ant-design/icons";
 import { getEllipsisTxt } from "../helpers/formatters";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import useERC20Tokens from "hooks/useERC20Tokens";
-
 
 function Home(props) {
   const { tokens } = useERC20Tokens();

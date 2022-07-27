@@ -11,6 +11,7 @@ import ReactPlayer from "react-player";
 import {
   LineChart,
   TokenData,
+  ActiveOrder,
   AddAnnouncementModal,
   TokenGallery,
   AddPhotos,
@@ -71,10 +72,9 @@ function Token() {
   const getOrders = async () => {
     if (!isAuthenticated) return null;
     const user = await Moralis.User.current();
-    let orders = user.get("Orders");
+    let orders = user.get("orders");
     setOrders(orders);
   };
-  console.log(orders);
 
   useEffect(() => {
     getOrders();
@@ -136,141 +136,10 @@ function Token() {
     }
   }, [isAuthenticated]);
 
-  // cancel order change to cancel pointer
-  const cancelOrder = async (orderTotal) => {
-    const orders = Moralis.Object.extend("Orders");
-    const query = new Moralis.Query(orders);
-    query.equalTo("orderTotal", orderTotal);
-    const result = await query.first();
-    if (result) {
-      result.destroy(),
-        (error) => {
-          console.log(error);
-        };
-    }
-  };
 
-  const cancelUserOrder = async (order) => {
-    try {
-      const user = await Moralis.User.current();
-      console.log(order);
-      await user.remove("Order", order);
-      await user.save().then(getOrders());
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  console.log(tokenPrice);
 
   // AAVE address 0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae
 
-  // {!orders ? null : (
-  //  <Card
-  //    style={{
-  //      width: "55%",
-  //      margin: "5px",
-  //      padding: "10px",
-  //      float: "left",
-  //      border: "1px solid #202020",
-  //      borderRadius: "0.5rem",
-  //      backgroundColor: "#202020",
-  //      position: "relative",
-  //    }}
-  //  >
-  //    <Title level={3} style={{ color: "lime", margin: "0px auto" }}>
-  //      Active Orders
-  //    </Title>
-  //    <div style={{ width: "100%" }}>
-  //      <span
-  //        style={{
-  //          float: "left",
-  //          marginRight: "8.25%",
-  //          color: "lime",
-  //          display: "block",
-  //        }}
-  //      >
-  //        Qty
-  //      </span>
-  //      <span
-  //        style={{
-  //          float: "left",
-  //          marginRight: "8.25%",
-  //          color: "lime",
-  //          display: "block",
-  //        }}
-  //      >
-  //        Type
-  //      </span>
-  //      <span
-  //        style={{
-  //          float: "left",
-  //          marginRight: "8.25%",
-  //          color: "lime",
-  //          display: "block",
-  //        }}
-  //      >
-  //        Token
-  //      </span>
-  //      <span
-  //        style={{
-  //          float: "left",
-  //          marginRight: "8.25%",
-  //          color: "lime",
-  //          display: "block",
-  //        }}
-  //      >
-  //        Exuection Price
-  //      </span>
-  //      <span
-  //        style={{
-  //          float: "left",
-  //          marginRight: "8.25%",
-  //          color: "lime",
-  //          display: "block",
-  //        }}
-  //      >
-  //        Total Cost
-  //      </span>
-  //    </div>
-  //    {Object.keys(orders).map((order, index) => (
-  //      <div>
-  //        <Card key={index} style={{ backgroundColor: "#909090" }}>
-  //          <span
-  //            style={{
-  //              float: "left",
-  //              color: "black",
-  //              marginRight: "8.25%",
-  //            }}
-  //          >
-  //            {orders[order].orderAmount}
-  //          </span>
-  //          <span style={{ color: "black", marginRight: "8.25%" }}>
-  //            {orders[order].order}
-  //          </span>
-  //          <span style={{ color: "black", marginRight: "8.25%" }}>
-  //            {orders[order].tokenName}
-  //          </span>
-  //          <span style={{ color: "black", marginRight: "8.25%" }}>
-  //            {orders[order].exuectionPrice}
-  //          </span>
-  //          <span style={{ color: "black", marginRight: "8.25%" }}>
-  //            {orders[order].orderTotal}
-  //          </span>
-  //          <button
-  //            onClick={() =>
-  //              cancelOrder(orders[order].orderTotal).then(() =>
-  //                cancelUserOrder(order),
-  //              )
-  //            }
-  //          >
-  //            Cancel
-  //          </button>
-  //        </Card>
-  //      </div>
-  //    ))}
-  //  </Card>
-  //)}
   return (
     <div
       style={{
@@ -342,9 +211,22 @@ function Token() {
             onClick={() => addWatchlist(address)}
           />
         )}
-        <LineChart
-          address={address}
-          chain={tokenMetaData?.Chain}
+        <LineChart address={address} chain={tokenMetaData?.Chain} />
+      </Card>
+
+      <Card style={{
+        width: "55%",
+        margin: "5px",
+        padding: "10px",
+        float: "left",
+        border: "1px solid #202020",
+        borderRadius: "0.5rem",
+        backgroundColor: "#909090",
+        position: "relative",
+      }}
+      >
+        <ActiveOrder
+          objectID={orders}
         />
       </Card>
 

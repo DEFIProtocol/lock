@@ -10,6 +10,7 @@ function DEX({ chain }) {
   const { Moralis, isAuthenticated } = useMoralis();
   const [watchlist, setWatchlist] = useState([]);
 
+
   console.log(tokenList);
 
   const getFavorites = async () => {
@@ -82,66 +83,66 @@ function DEX({ chain }) {
       {!tokenList
         ? null
         : Object.keys(tokenList).map((token, index) => (
-            <div
+          <div
+            style={{
+              padding: "5px 20px",
+              display: "flex",
+              alignItems: "center",
+              cursor: "pointer",
+            }}
+            key={index}
+          >
+            <Card
               style={{
-                padding: "5px 20px",
-                display: "flex",
-                alignItems: "center",
-                cursor: "pointer",
+                backgroundColor: "#202020",
+                width: "100%",
+                color: "lime",
+                border: "1px solid #202020",
               }}
-              key={index}
             >
-              <Card
-                style={{
-                  backgroundColor: "#202020",
-                  width: "100%",
-                  color: "lime",
-                  border: "1px solid #202020",
-                }}
+              <Link
+                to={`/${tokenList[token].name}/${chain}/${tokenList[token].address}`}
               >
-                <Link
-                  to={`/${tokenList[token].name}/${chain}/${tokenList[token].address}`}
-                >
-                  <img
+                <img
+                  style={{
+                    height: "32px",
+                    width: "32px",
+                    marginRight: "20px",
+                    float: "left",
+                  }}
+                  src={tokenList[token].logoURI}
+                  alt="noLogo"
+                />
+                <div style={{ float: "left" }}>
+                  <h4 title="Organization" style={{ color: "lime" }}>
+                    {tokenList[token].name}
+                  </h4>
+                  <span
                     style={{
-                      height: "32px",
-                      width: "32px",
-                      marginRight: "20px",
-                      float: "left",
+                      fontWeight: "600",
+                      fontSize: "15px",
+                      lineHeight: "14px",
+                      color: "lime",
                     }}
-                    src={tokenList[token].logoURI}
-                    alt="noLogo"
-                  />
-                  <div style={{ float: "left" }}>
-                    <h4 title="Organization" style={{ color: "lime" }}>
-                      {tokenList[token].name}
-                    </h4>
-                    <span
-                      style={{
-                        fontWeight: "600",
-                        fontSize: "15px",
-                        lineHeight: "14px",
-                        color: "lime",
-                      }}
-                    >
-                      {tokenList[token].symbol}
-                    </span>
-                  </div>
-                </Link>
-                {watchlist.includes(tokenList[token].address) ? (
-                  <StarFilled
-                    style={{ float: "right" }}
-                    onClick={() => removeWatchlist(tokenList[token].address)}
-                  />
-                ) : (
-                  <StarOutlined
-                    style={{ float: "right" }}
-                    onClick={() => addWatchlist(tokenList[token].address)}
-                  />
-                )}
-              </Card>
-            </div>
-          ))}
+                  >
+                    {tokenList[token].symbol}
+                  </span>
+                </div>
+              </Link>
+              {watchlist.includes(tokenList[token].address) ? (
+                <StarFilled
+                  style={{ float: "right" }}
+                  onClick={() => removeWatchlist(tokenList[token].address)}
+                />
+              ) : (
+                <StarOutlined
+                  style={{ float: "right" }}
+                  onClick={() => addWatchlist(tokenList[token].address)}
+                />
+              )}
+            </Card>
+          </div>
+        ))}
     </div>
   );
 }
