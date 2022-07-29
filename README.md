@@ -1,5 +1,3 @@
-
-
 gridLock
 
 gridLock is an application that is intended to be a transparent platform for crypto companies to raise capital. This application can be thought of as a next generation DEX or similar to stock exchanges around the globe. However, instead of stocks being a representation of ownership in a company operating in an economy(for example Amazon is listed on the New York Stock Exchange), instead is tokens that is ownership in a company that operates in the crypto economy. Even with the lack of government regulation around the globe, the regulation is set forth by the contract the token was built on. This sets limitations around the issuance and distribution of company tokens. Additionally, tokens can represent a specified amount of a precious metals or any other asset. Which is essentially like backing a token by gold or silver if the organization operates there token appropriately. On the NYSE today for every one ounce of gold held in reserves, there is actually 113 paper piece of gold, and the silver is a ratio of 1 oz to 406 pieces of paper. Not even the gold and silver in traditional markets have a 1 to 1 backing of certificates.

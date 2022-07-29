@@ -5,11 +5,6 @@ const useOrders = (objectID) => {
   const { isAuthenticated } = useMoralis();
   const [userOrder, setUserOrder] = useState();
   // const [token, setToken] = useState()
-  const { fetch } = useMoralisCloudFunction(
-    "getOrders",
-    { orders: "orders" },
-    { autoFetch: false },
-  );
 
   useEffect(() => {
     if (!isAuthenticated) return null;

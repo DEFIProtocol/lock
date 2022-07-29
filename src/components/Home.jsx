@@ -2,9 +2,10 @@ import { useMoralis, useERC20Balances } from "react-moralis";
 import { Skeleton, Table, Card } from "antd";
 import { StarFilled, StarOutlined } from "@ant-design/icons";
 import { getEllipsisTxt } from "../helpers/formatters";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import useERC20Tokens from "hooks/useERC20Tokens";
+import "./style.css";
 
 function Home(props) {
   const { tokens } = useERC20Tokens();
@@ -78,6 +79,7 @@ function Home(props) {
     },
   ];
 
+
   return (
     <div style={{ width: "90%", padding: "15px" }}>
       <h1 style={{ color: "lime" }}>Investments</h1>
@@ -96,115 +98,115 @@ function Home(props) {
         {!tokens
           ? null
           : Object.keys(tokens).map((token, index) => (
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  cursor: "pointer",
-                }}
-                key={index}
-              >
-                {!watchlist.includes(tokens[token].Address) ? null : (
-                  <Card
-                    style={{
-                      backgroundColor: "#202020",
-                      width: "100%",
-                      color: "lime",
-                      border: "1px solid #202020",
-                      margin: "5px auto",
-                    }}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                cursor: "pointer",
+              }}
+              key={index}
+            >
+              {!watchlist.includes(tokens[token].Address) ? null : (
+                <Card
+                  style={{
+                    backgroundColor: "#202020",
+                    width: "100%",
+                    color: "lime",
+                    border: "1px solid #202020",
+                    margin: "5px auto",
+                  }}
+                >
+                  <Link
+                    to={`/${tokens[token].Name}/${tokens[token].Address}`}
                   >
-                    <Link
-                      to={`/${tokens[token].Name}/${tokens[token].Address}`}
-                    >
-                      <div style={{ display: "flex", alignItems: "center" }}>
-                        <img
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                      <img
+                        style={{
+                          height: "32px",
+                          width: "32px",
+                          marginRight: "20px",
+                          float: "left",
+                        }}
+                        src={tokens[token].Logo}
+                        alt="noLogo"
+                      />
+                      <div style={{ float: "left" }}>
+                        <h4 title="Organization" style={{ color: "lime" }}>
+                          {tokens[token].Name}
+                        </h4>
+                        <span
                           style={{
-                            height: "32px",
-                            width: "32px",
-                            marginRight: "20px",
-                            float: "left",
+                            fontWeight: "600",
+                            fontSize: "15px",
+                            lineHeight: "14px",
+                            color: "lime",
+                            position: "absolute",
                           }}
-                          src={tokens[token].Logo}
-                          alt="noLogo"
-                        />
-                        <div style={{ float: "left" }}>
-                          <h4 title="Organization" style={{ color: "lime" }}>
-                            {tokens[token].Name}
-                          </h4>
-                          <span
-                            style={{
-                              fontWeight: "600",
-                              fontSize: "15px",
-                              lineHeight: "14px",
-                              color: "lime",
-                              position: "absolute",
-                            }}
-                          >
-                            {tokens[token].Symbol}
-                          </span>
-                        </div>
-                        <div>
-                          <span
-                            style={{
-                              fontWeight: "600",
-                              fontSize: "15px",
-                              padding: "20px",
-                              color: "lime",
-                              position: "absolute",
-                              left: "40%",
-                              float: "top",
-                              top: "20%",
-                            }}
-                          >
-                            {tokens[token].Type == null
-                              ? "--"
-                              : tokens[token].Type}
-                          </span>
-                          <span
-                            style={{
-                              fontWeight: "600",
-                              fontSize: "15px",
-                              padding: "20px",
-                              color: "lime",
-                              left: "70%",
-                              float: "top",
-                              position: "absolute",
-                              top: "20%",
-                            }}
-                          >
-                            {tokens[token].LastPrice == null
-                              ? "--"
-                              : tokens[token].LastPrice}
-                          </span>
-                        </div>
+                        >
+                          {tokens[token].Symbol}
+                        </span>
                       </div>
-                    </Link>
-                    {watchlist.includes(tokens[token].Address) ? (
-                      <StarFilled
-                        style={{
-                          float: "right",
-                          top: "10%",
-                          margin: "10px",
-                          fontSize: "125%",
-                        }}
-                        onClick={() => removeWatchlist(tokens[token].Address)}
-                      />
-                    ) : (
-                      <StarOutlined
-                        style={{
-                          float: "right",
-                          top: "10%",
-                          margin: "10px",
-                          fontSize: "125%",
-                        }}
-                        onClick={() => addWatchlist(tokens[token].Address)}
-                      />
-                    )}
-                  </Card>
-                )}
-              </div>
-            ))}
+                      <div>
+                        <span
+                          style={{
+                            fontWeight: "600",
+                            fontSize: "15px",
+                            padding: "20px",
+                            color: "lime",
+                            position: "absolute",
+                            left: "40%",
+                            float: "top",
+                            top: "20%",
+                          }}
+                        >
+                          {tokens[token].Type == null
+                            ? "--"
+                            : tokens[token].Type}
+                        </span>
+                        <span
+                          style={{
+                            fontWeight: "600",
+                            fontSize: "15px",
+                            padding: "20px",
+                            color: "lime",
+                            left: "70%",
+                            float: "top",
+                            position: "absolute",
+                            top: "20%",
+                          }}
+                        >
+                          {tokens[token].LastPrice == null
+                            ? "--"
+                            : tokens[token].LastPrice}
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                  {watchlist.includes(tokens[token].Address) ? (
+                    <StarFilled
+                      style={{
+                        float: "right",
+                        top: "10%",
+                        margin: "10px",
+                        fontSize: "125%",
+                      }}
+                      onClick={() => removeWatchlist(tokens[token].Address)}
+                    />
+                  ) : (
+                    <StarOutlined
+                      style={{
+                        float: "right",
+                        top: "10%",
+                        margin: "10px",
+                        fontSize: "125%",
+                      }}
+                      onClick={() => addWatchlist(tokens[token].Address)}
+                    />
+                  )}
+                </Card>
+              )}
+            </div>
+          ))}
       </div>
     </div>
   );

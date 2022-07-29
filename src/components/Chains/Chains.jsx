@@ -13,10 +13,13 @@ const styles = {
     fontFamily: "Roboto, sans-serif",
     fontSize: "14px",
     padding: "0 10px",
+    color: "#909090",
+    backgroundColor: "black"
   },
   button: {
-    border: "2px solid rgb(231, 234, 243)",
+    border: "2px solid black",
     borderRadius: "12px",
+    backgroundColor: "black",
   },
 };
 
@@ -103,7 +106,7 @@ function Chains() {
   };
 
   const menu = (
-    <Menu onClick={handleMenuClick}>
+    <Menu onClick={handleMenuClick} >
       {menuItems.map((item) => (
         <Menu.Item key={item.key} icon={item.icon} style={styles.item}>
           <span style={{ marginLeft: "5px" }}>{item.value}</span>

@@ -45,8 +45,6 @@ export const LineChart = ({ address, chain }) => {
   const [price, setPrice] = useState();
   const [timeperiod, setTimeperiod] = useState("7");
 
-  const time = ["7", "30", "90", "365"];
-
   const tokenTimestamp = Array(Number(timeperiod))
     .fill()
     .map((e, i) => moment().subtract(i, "d").format("YYYY-MM-DD"))
@@ -80,7 +78,7 @@ export const LineChart = ({ address, chain }) => {
 
   useEffect(() => {
     priceHistory();
-  }, []);
+  }, [timeperiod]);
 
   const data = {
     labels: tokenTimestamp,
@@ -107,27 +105,131 @@ export const LineChart = ({ address, chain }) => {
     },
   };
 
-  const handleChange = (value) => {
+  const handleTimeFrame = (value) => {
     setTimeperiod(value);
   };
 
   return (
     <>
-      <Row style={styles.chartheader}>
-        <div style={{ display: "inline-block", width: "100%" }}>
-          <Select
-            style={{ marginLeft: "70%" }}
-            defaultValue="7"
-            placeholder="Select Timeperiod"
-            onChange={handleChange}
-          >
-            {time.map((date) => (
-              <Option key={date}>{date}</Option>
-            ))}
-          </Select>
-        </div>
-      </Row>
-      <Line data={data} options={options} style={{ height: "100%" }} />
+      <div
+        style={{
+          width: "100%",
+          justifyContent: "center",
+          display: "flex",
+          margin: "0px auto",
+          marginBottom: "0px",
+        }}
+      >
+        <span
+          style={{
+            color: "lime",
+            width: "16%",
+            height: "100%",
+            fontSize: "1.25em",
+            marginTop: "5%",
+            margin: "2px",
+            border: `3px solid ${timeperiod == "7" ? "lime" : "#606060"}`,
+            textAlign: "center",
+            padding: "2.5%",
+            borderRadius: ".5em",
+            borderTop: "0px",
+          }}
+          onClick={() => handleTimeFrame("7")}
+        >
+          7d
+        </span>
+        <span
+          style={{
+            color: "lime",
+            width: "16%",
+            height: "100%",
+            fontSize: "1.25em",
+            marginTop: "5%",
+            margin: "2px",
+            border: `3px solid ${timeperiod == "30" ? "lime" : "#606060"}`,
+            textAlign: "center",
+            padding: "2.5%",
+            borderRadius: ".5em",
+            borderTop: "0px",
+          }}
+          onClick={() => handleTimeFrame("30")}
+        >
+          1m
+        </span>
+        <span
+          style={{
+            color: "lime",
+            width: "16%",
+            height: "100%",
+            fontSize: "1.25em",
+            marginTop: "5%",
+            margin: "2px",
+            border: `3px solid ${timeperiod == "60" ? "lime" : "#606060"}`,
+            textAlign: "center",
+            padding: "2.5%",
+            borderRadius: ".5em",
+            borderTop: "0px",
+          }}
+          onClick={() => handleTimeFrame("60")}
+        >
+          2m
+        </span>
+        <span
+          style={{
+            color: "lime",
+            width: "16%",
+            height: "100%",
+            fontSize: "1.25em",
+            marginTop: "5%",
+            margin: "2px",
+            border: `3px solid ${timeperiod == "90" ? "lime" : "#606060"}`,
+            textAlign: "center",
+            padding: "2.5%",
+            borderRadius: ".5em",
+            borderTop: "0px",
+          }}
+          onClick={() => handleTimeFrame("90")}
+        >
+          3m
+        </span>
+        <span
+          style={{
+            color: "lime",
+            width: "16%",
+            height: "100%",
+            fontSize: "1.25em",
+            marginTop: "5%",
+            margin: "2px",
+            border: `3px solid  ${timeperiod == "180" ? "lime" : "#606060"}`,
+            textAlign: "center",
+            padding: "2.5%",
+            borderRadius: ".5em",
+            borderTop: "0px",
+          }}
+          onClick={() => handleTimeFrame("180")}
+        >
+          6m
+        </span>
+        <span
+          style={{
+            color: "lime",
+            width: "16%",
+            height: "100%",
+            fontSize: "1.25em",
+            marginTop: "5%",
+            margin: "2px",
+            border: `3px solid  ${timeperiod == "365" ? "lime" : "#606060"}`,
+            textAlign: "center",
+            padding: "2.5%",
+            borderRadius: ".5em",
+            borderTop: "0px",
+          }}
+          onClick={() => handleTimeFrame("365")}
+        >
+          1y
+        </span>
+      </div>
+      <Line data={data} options={options} style={{ width: "100%" }} />
     </>
   );
 };

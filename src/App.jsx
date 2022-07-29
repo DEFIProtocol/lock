@@ -13,7 +13,6 @@ import Chains from "components/Chains";
 import Wallet from "components/Wallet";
 import { Layout, /*Tabs,*/ Typography, Space } from "antd";
 import "antd/dist/antd.css";
-import "./style.css";
 // import Contract from "components/Contract/Contract";
 import {
   LandingPage,
@@ -55,12 +54,12 @@ const styles = {
     position: "fixed",
     zIndex: 1,
     width: "100%",
-    background: "black",
+    background: "#202020",
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
     fontFamily: "Roboto, sans-serif",
-    borderBottom: "2px solid rgba(0, 0, 0, 0.06)",
+    borderBottom: "10px solid black",
     padding: "0 10px",
     boxShadow: "0 1px 10px rgb(151 164 175 / 10%)",
   },
@@ -69,6 +68,8 @@ const styles = {
     alignItems: "center",
     fontSize: "15px",
     fontWeight: "600",
+    backgroundColor: "#202020",
+    borderBottom: "10px solid black",
   },
 };
 const App = () => {
@@ -88,8 +89,8 @@ const App = () => {
         <Header style={styles.header}>
           <MenuItems />
           <div style={styles.headerRight}>
-            <Chains />
             <NativeBalance />
+            <Chains />
             <Account />
           </div>
         </Header>

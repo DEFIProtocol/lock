@@ -190,8 +190,6 @@ function Token() {
       <Card
         style={{
           width: "55%",
-          margin: "5px",
-          padding: "10px",
           float: "left",
           border: "1px solid #202020",
           borderRadius: "0.5rem",
@@ -210,21 +208,6 @@ function Token() {
           />
         )}
         <LineChart address={address} chain={tokenMetaData?.Chain} />
-      </Card>
-
-      <Card
-        style={{
-          width: "55%",
-          margin: "5px",
-          padding: "10px",
-          float: "left",
-          border: "1px solid #202020",
-          borderRadius: "0.5rem",
-          backgroundColor: "#909090",
-          position: "relative",
-        }}
-      >
-        <ActiveOrder objectID={orders} />
       </Card>
 
       <Card
@@ -277,9 +260,24 @@ function Token() {
         </span>
       </Card>
 
+      <Card
+        style={{
+          width: "55%",
+          margin: "5px",
+          padding: "10px",
+          float: "left",
+          border: "1px solid #202020",
+          borderRadius: "0.5rem",
+          backgroundColor: "#909090",
+          position: "relative",
+        }}
+      >
+        <ActiveOrder objectID={orders} />
+      </Card>
+
       {!tokenMetaData?.ProfilePic &&
-      !tokenMetaData?.Video &&
-      !tokenMetaData?.Pictures ? null : (
+        !tokenMetaData?.Video &&
+        !tokenMetaData?.Pictures ? null : (
         <Card
           style={{
             width: "43%",
