@@ -276,8 +276,8 @@ function Token() {
       </Card>
 
       {!tokenMetaData?.ProfilePic &&
-        !tokenMetaData?.Video &&
-        !tokenMetaData?.Pictures ? null : (
+      !tokenMetaData?.Video &&
+      !tokenMetaData?.Pictures ? null : (
         <Card
           style={{
             width: "43%",

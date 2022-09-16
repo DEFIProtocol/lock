@@ -1,10 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { Card, Skeleton, Typography } from "antd";
-import useOrders from "hooks/useOrders";
+import React, { useEffect } from "react";
 import { useMoralisCloudFunction, useMoralis } from "react-moralis";
 
-function ActiveOrder(objectID) {
-  const [userOrder, setUserOrder] = useState();
+function ActiveOrder() {
   const { isAuthenticated } = useMoralis();
   const { fetch } = useMoralisCloudFunction(
     "getOrders",
@@ -19,21 +16,6 @@ function ActiveOrder(objectID) {
       onError: (error) => console.log(error),
     });
   }, []);
-
-  const cancelOrder = async (objectID) => {
-    const orders = Moralis.Object.extend("Orders");
-    const query = new Moralis.Query(orders);
-    query.equalTo("objectId", objectID);
-    const result = await query.first();
-    if (result) {
-      result.destroy(),
-        (error) => {
-          console.log(error);
-        };
-    }
-  };
-
-  console.log(userOrder);
 
   //    <Skeleton loading={!userOrder} active>
   //    <Card>

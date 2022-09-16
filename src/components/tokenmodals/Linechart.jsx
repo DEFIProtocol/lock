@@ -4,7 +4,6 @@
 
 import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
-import { Row, Select } from "antd";
 import moment from "moment";
 import { useMoralis } from "react-moralis";
 import {
@@ -27,18 +26,6 @@ ChartJS.register(
   Tooltip,
   Legend,
 );
-
-const styles = {
-  chartheader: {
-    display: "flex",
-    justifyContent: "space-between",
-    color: "lime",
-    height: "100%",
-  },
-  charttitle: {
-    color: "lime",
-  },
-};
 
 export const LineChart = ({ address, chain }) => {
   const { Moralis } = useMoralis();

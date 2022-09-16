@@ -1,9 +1,6 @@
 import React, { useState } from "react";
-import { Typography } from "antd";
 import { useMoralis } from "react-moralis";
 import axios from "axios";
-
-const { Title } = Typography;
 
 function AddPhotos({ open, onClose, address, ProfilePic, render }) {
   const { Moralis } = useMoralis();

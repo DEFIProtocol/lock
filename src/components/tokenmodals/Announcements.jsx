@@ -1,7 +1,7 @@
 import React from "react";
 import { Image } from "cloudinary-react";
 
-function Announcements({ announcements, name }) {
+function Announcements({ announcements }) {
   if (!announcements) return null;
   return (
     <div style={{ marginTop: "30px" }}>

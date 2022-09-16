@@ -14,7 +14,7 @@ const styles = {
     fontSize: "14px",
     padding: "0 10px",
     color: "#909090",
-    backgroundColor: "black"
+    backgroundColor: "black",
   },
   button: {
     border: "2px solid black",
@@ -106,7 +106,7 @@ function Chains() {
   };
 
   const menu = (
-    <Menu onClick={handleMenuClick} >
+    <Menu onClick={handleMenuClick}>
       {menuItems.map((item) => (
         <Menu.Item key={item.key} icon={item.icon} style={styles.item}>
           <span style={{ marginLeft: "5px" }}>{item.value}</span>

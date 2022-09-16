@@ -2,7 +2,7 @@ import { useMoralis, useERC20Balances } from "react-moralis";
 import { Skeleton, Table, Card } from "antd";
 import { StarFilled, StarOutlined } from "@ant-design/icons";
 import { getEllipsisTxt } from "../helpers/formatters";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import useERC20Tokens from "hooks/useERC20Tokens";
 import "./style.css";
@@ -32,6 +32,19 @@ function Home(props) {
       const user = await Moralis.User.current();
       console.log(user);
       await user.remove("Favorites", token);
+      await user.save().then(getFavorites());
+    } catch (error) {
+      alert("error" + error.code + error.message);
+    }
+  };
+
+  const addWatchlist = async (token) => {
+    if (!isAuthenticated)
+      return alert("You must connect your wallet to add to your watchlist");
+    try {
+      const user = await Moralis.User.current();
+      //const favorites = user.relation("Watchlist");
+      await user.addUnique("Favorites", token);
       await user.save().then(getFavorites());
     } catch (error) {
       alert("error" + error.code + error.message);
@@ -78,7 +91,6 @@ function Home(props) {
       render: (address) => getEllipsisTxt(address, 5),
     },
   ];
-
 
   return (
     <div style={{ width: "90%", padding: "15px" }}>

@@ -7,7 +7,14 @@ function NativeBalance(props) {
   if (!account || !isAuthenticated) return null;
 
   return (
-    <div style={{ textAlign: "center", whiteSpace: "nowrap", color: "white", marginRight: "10px" }}>
+    <div
+      style={{
+        textAlign: "center",
+        whiteSpace: "nowrap",
+        color: "white",
+        marginRight: "10px",
+      }}
+    >
       {balance.formatted}
     </div>
   );
