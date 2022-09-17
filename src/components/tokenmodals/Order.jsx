@@ -67,17 +67,17 @@ function Order({
     var currentTrade =
       buyOrSell == "buy"
         ? {
-          fromToken: fromToken,
-          toToken: toToken,
-          fromAmount: orderAmount,
-          chain: chain,
-        }
+            fromToken: fromToken,
+            toToken: toToken,
+            fromAmount: orderAmount,
+            chain: chain,
+          }
         : {
-          fromToken: fromToken,
-          toToken: toToken,
-          fromAmount: orderAmount,
-          chain: chain,
-        };
+            fromToken: fromToken,
+            toToken: toToken,
+            fromAmount: orderAmount,
+            chain: chain,
+          };
     try {
       var gas = await getQuote(currentTrade);
       var ethGas = `${gas?.estimatedGas} WEI`;
@@ -95,12 +95,12 @@ function Order({
     var ethCost =
       priced == "usd"
         ? (ethValue * orderAmount * 1.01) /*+ decQuote*/
-          .toLocaleString() // buy or sell token in usd
+            .toLocaleString() // buy or sell token in usd
         : orderValue * 1.01; /*+ decQuote*/ // buy or sell token in eth
     var orderTotal =
       priced == "usd"
         ? (orderValue * 1.01) /* (decQuote * (ethValue / price))*/
-          .toLocaleString() // buy or sell token in usd
+            .toLocaleString() // buy or sell token in usd
         : ethCost * (price / ethValue); /* (decQuote * (ethValue / price))*/ // buy or sell token in eth
     var fee =
       priced == "usd"

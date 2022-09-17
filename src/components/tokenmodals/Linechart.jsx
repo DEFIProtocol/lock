@@ -41,7 +41,7 @@ export const LineChart = ({ address, chain }) => {
     if (!Moralis) return null;
     let blocks = await Promise.all(
       tokenTimestamp.map(
-        async (e, i) =>
+        async (e) =>
           await Moralis.Web3API.native.getDateToBlock({
             date: e,
             chain: chain,
@@ -50,7 +50,7 @@ export const LineChart = ({ address, chain }) => {
     );
     let tokenPrice = await Promise.all(
       blocks.map(
-        async (e, i) =>
+        async (e) =>
           await Moralis.Web3API.token.getTokenPrice({
             address: address,
             to_block: e.block,
