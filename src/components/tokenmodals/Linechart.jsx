@@ -2,7 +2,7 @@
 // make sure pricing is accurate
 // fix timeperiod change
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Line } from "react-chartjs-2";
 import moment from "moment";
 import { useMoralis } from "react-moralis";
@@ -37,7 +37,7 @@ export const LineChart = ({ address, chain }) => {
     .map((e, i) => moment().subtract(i, "d").format("YYYY-MM-DD"))
     .reverse();
 
-  const priceHistory = async () => {
+  const priceHistory = useCallback(async () => {
     if (!Moralis) return null;
     let blocks = await Promise.all(
       tokenTimestamp.map(
@@ -61,11 +61,11 @@ export const LineChart = ({ address, chain }) => {
     tokenPrice = tokenPrice.map((e) => e.usdPrice);
     setPrice(tokenPrice);
     console.log(tokenPrice);
-  };
+  }, [Moralis, address, chain, tokenTimestamp]);
 
   useEffect(() => {
     priceHistory();
-  }, [timeperiod]);
+  }, [timeperiod, priceHistory]);
 
   const data = {
     labels: tokenTimestamp,

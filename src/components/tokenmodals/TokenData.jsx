@@ -1,7 +1,7 @@
 // fix contractAddress input not being read
 // set up on hover additional details for
 
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { ethers } from "ethers";
 import { useEffect } from "react";
 import { Typography } from "antd";
@@ -26,23 +26,30 @@ function TokenData({ price, contractAddress, ethValue, logo }) {
 
   const address = "0x626E8036dEB333b408Be468F951bdB42433cBF18";
   const rpcURL = process.env.INFURA_API_KEY;
-  const provider = new ethers.providers.InfuraProvider("mainnet", rpcURL);
-  const ERC20_ABI = [
-    "function name() view returns (string)",
-    "function symbol() view returns (string)",
-    "function decimals() view returns (uint8)",
-    "function totalSupply() view returns (uint256)",
-    //  "function balanceOf(address) view returns (uint256)",
-    //  "function transfer(address, uint256) returns (bool)",
-    //  "function transferFrom(address, address, uint256) returns (bool)",
-    //   "function approve(address, uint256) returns (bool)",
-  ];
 
-  const contract = new ethers.Contract(address, ERC20_ABI, provider);
+  const provider = useCallback(() => {
+    new ethers.providers.InfuraProvider("mainnet", rpcURL);
+  }, [rpcURL]);
+  const ERC20_ABI = useCallback(() => {
+    [
+      "function name() view returns (string)",
+      "function symbol() view returns (string)",
+      "function decimals() view returns (uint8)",
+      "function totalSupply() view returns (uint256)",
+      //  "function balanceOf(address) view returns (uint256)",
+      //  "function transfer(address, uint256) returns (bool)",
+      //  "function transferFrom(address, address, uint256) returns (bool)",
+      //   "function approve(address, uint256) returns (bool)",
+    ];
+  }, []);
+
+  const contract = useCallback(() => {
+    new ethers.Contract(address, ERC20_ABI, provider);
+  }, [ERC20_ABI, provider]);
   console.log(contractAddress);
   console.log(address);
 
-  const marketCapitalization = async () => {
+  const marketCapitalization = useCallback(async () => {
     const name = await contract.name();
     const symbol = await contract.symbol();
     const totalSupply = await contract.totalSupply();
@@ -58,13 +65,13 @@ function TokenData({ price, contractAddress, ethValue, logo }) {
       name: name,
       supply: supply,
     };
-  };
+  }, [contract, price]);
   console.log(parseFloat(ethValue));
   console.log(parseInt(ethValue).toFixed(18));
 
   useEffect(() => {
     marketCapitalization();
-  }, []);
+  }, [marketCapitalization]);
 
   console.log(ethValue);
 

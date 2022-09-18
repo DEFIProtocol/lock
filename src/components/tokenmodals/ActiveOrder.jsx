@@ -15,7 +15,7 @@ function ActiveOrder() {
       onSuccess: (orders) => console.log(orders),
       onError: (error) => console.log(error),
     });
-  }, []);
+  }, [fetch, isAuthenticated]);
 
   //    <Skeleton loading={!userOrder} active>
   //    <Card>

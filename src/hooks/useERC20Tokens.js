@@ -17,7 +17,7 @@ const useERC20Tokens = () => {
       onSuccess: (sum) => setTokens(sum),
       onError: (error) => console.log(error),
     });
-  }, []);
+  }, [Moralis, fetch]);
 
   return { tokens };
 };

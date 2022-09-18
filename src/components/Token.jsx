@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   useMoralisWeb3Api,
   useMoralis,
@@ -46,39 +46,39 @@ function Token() {
     { autoFetch: false },
   );
 
-  const getTokens = async () => {
+  const getTokens = useCallback(async () => {
     fetch({
       onSuccess: (sum) =>
         setTokenMetaData(sum.filter((token) => token.Address == address).pop()),
       onError: (error) => console.log(error),
     });
-  };
+  }, [address, fetch]);
 
   useEffect(() => {
     getTokens();
-  }, []);
+  }, [getTokens]);
 
-  const getFavorites = async () => {
+  const getFavorites = useCallback(async () => {
     if (!isAuthenticated) return null;
     const user = await Moralis.User.current();
     let favorite = user.get("Favorites");
     setWatchlist(favorite);
-  };
+  }, [isAuthenticated, Moralis]);
 
   useEffect(() => {
     getFavorites();
-  }, []);
+  }, [getFavorites]);
 
-  const getOrders = async () => {
+  const getOrders = useCallback(async () => {
     if (!isAuthenticated) return null;
     const user = await Moralis.User.current();
     let orders = user.get("orders");
     setOrders(orders);
-  };
+  }, [Moralis, isAuthenticated]);
 
   useEffect(() => {
     getOrders();
-  }, []);
+  }, [getOrders]);
 
   const addWatchlist = async (token) => {
     if (!isAuthenticated)
@@ -105,7 +105,7 @@ function Token() {
     }
   };
 
-  const updatePrice = async () => {
+  const updatePrice = useCallback(async () => {
     const tokens = Moralis.Object.extend("Tokens");
     const query = new Moralis.Query(tokens);
     query.equalTo("Address", `${address}`);
@@ -113,9 +113,9 @@ function Token() {
     updateToken.set("LastPrice", tokenPrice);
     updateToken.save();
     return updateToken;
-  };
+  }, [Moralis, address, tokenPrice]);
 
-  const fetchTokenPrice = async () => {
+  const fetchTokenPrice = useCallback(async () => {
     const options = await {
       address: address,
       chain: tokenMetaData?.Chain,
@@ -124,17 +124,17 @@ function Token() {
     const ethPrice = price.nativePrice.value / 1000000000000000000;
     setEthValue(`${ethPrice}`);
     setTokenPrice(`${price.usdPrice.toLocaleString()}`).then(updatePrice());
-  };
+  }, [Web3Api, address, tokenMetaData, updatePrice]);
 
   useEffect(() => {
     fetchTokenPrice();
-  }, []);
+  }, [fetchTokenPrice]);
 
   useEffect(() => {
     if (isAuthenticated) {
       setUserAddress(user.attributes.ethAddress);
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, user]);
 
   // AAVE address 0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae
 

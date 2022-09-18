@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useMoralis } from "react-moralis";
 
 function EmailNotifications({ open, onClose }) {
@@ -7,16 +7,16 @@ function EmailNotifications({ open, onClose }) {
   const [newEmail, setNewEmail] = useState();
   const [setUpEmail, setSetUpEmail] = useState(false);
 
-  const getEmail = async () => {
+  const getEmail = useCallback(async () => {
     if (!Moralis && !isAuthenticated) return null;
     const user = await Moralis.User.current();
     let email = user.get("email");
     setEmail(email);
-  };
+  }, [Moralis, isAuthenticated]);
 
   useEffect(() => {
     getEmail();
-  }, []);
+  }, [getEmail]);
 
   const updateEmail = async () => {
     if (!isAuthenticated)

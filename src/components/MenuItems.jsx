@@ -1,7 +1,7 @@
 import { useLocation } from "react-router";
 import { Menu } from "antd";
 import { NavLink } from "react-router-dom";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useMoralis } from "react-moralis";
 
 function MenuItems() {
@@ -9,16 +9,16 @@ function MenuItems() {
   const { pathname } = useLocation();
   const [admin, setAdmin] = useState();
 
-  const getAdmin = async () => {
+  const getAdmin = useCallback(async () => {
     if (!isAuthenticated) return null;
     const user = await Moralis.User.current();
     let admin = user.get("Admin");
     setAdmin(admin);
-  };
+  }, [Moralis, isAuthenticated]);
 
   useEffect(() => {
     getAdmin();
-  }, []);
+  }, [getAdmin]);
 
   return (
     <>

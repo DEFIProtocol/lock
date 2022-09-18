@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useMoralisCloudFunction, useMoralis } from "react-moralis";
 import { Card } from "antd";
 
@@ -13,17 +13,17 @@ function Admin() {
     { autoFetch: false },
   );
 
-  const getIssues = async () => {
+  const getIssues = useCallback(async () => {
     fetch({
       onSuccess: (issues) => setIssue(issues),
       onError: (error) => console.log(error),
     });
-  };
+  }, [fetch]);
   console.log(issue);
 
   useEffect(() => {
     getIssues();
-  }, []);
+  }, [getIssues]);
 
   const deleteIssue = async (message) => {
     const admin = Moralis.Object.extend("Admin");

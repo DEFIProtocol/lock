@@ -19,7 +19,7 @@ function TokenGallery({ open, onClose, address, pictures, render }) {
       setUserAddress(user.attributes.ethAddress);
       setPictureArray(pictures.slice(0).reverse());
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, user, pictures]);
 
   const previous = () => {
     if (slideIndex !== 1) {

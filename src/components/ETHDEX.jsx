@@ -3,7 +3,7 @@
 import { Link } from "react-router-dom";
 import { Card } from "antd";
 import { StarOutlined, StarFilled } from "@ant-design/icons";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useMoralis } from "react-moralis";
 import useERC20Tokens from "hooks/useERC20Tokens";
 
@@ -16,42 +16,48 @@ function ETHDEX() {
 
   console.log(tokens);
 
-  const getFavorites = async () => {
+  const getFavorites = useCallback(async () => {
     if (!isAuthenticated) return null;
     const user = await Moralis.User.current();
     let favorite = user.get("Favorites");
     setWatchlist(favorite);
-  };
+  }, [isAuthenticated, Moralis]);
 
   // look at watchlist / relations and watchlistMetadata function on home page.
-  const addWatchlist = async (token) => {
-    if (!isAuthenticated)
-      return alert("You must connect your wallet to add to your watchlist");
-    try {
-      const user = await Moralis.User.current();
-      //const favorites = user.relation("Watchlist");
-      await user.addUnique("Favorites", token);
-      await user.save().then(getFavorites());
-    } catch (error) {
-      alert("error" + error.code + error.message);
-    }
-  };
+  const addWatchlist = useCallback(
+    async (token) => {
+      if (!isAuthenticated)
+        return alert("You must connect your wallet to add to your watchlist");
+      try {
+        const user = await Moralis.User.current();
+        //const favorites = user.relation("Watchlist");
+        await user.addUnique("Favorites", token);
+        await user.save().then(getFavorites());
+      } catch (error) {
+        alert("error" + error.code + error.message);
+      }
+    },
+    [Moralis, getFavorites, isAuthenticated],
+  );
 
-  const removeWatchlist = async (token) => {
-    if (!isAuthenticated) return null;
-    try {
-      const user = await Moralis.User.current();
-      console.log(user);
-      await user.remove("Favorites", token);
-      await user.save().then(getFavorites());
-    } catch (error) {
-      alert("error" + error.code + error.message);
-    }
-  };
+  const removeWatchlist = useCallback(
+    async (token) => {
+      if (!isAuthenticated) return null;
+      try {
+        const user = await Moralis.User.current();
+        console.log(user);
+        await user.remove("Favorites", token);
+        await user.save().then(getFavorites());
+      } catch (error) {
+        alert("error" + error.code + error.message);
+      }
+    },
+    [Moralis, isAuthenticated, getFavorites],
+  );
 
   useEffect(() => {
     getFavorites();
-  }, [addWatchlist, removeWatchlist]);
+  }, [addWatchlist, removeWatchlist, getFavorites]);
 
   //const filteredTokens = () => {
   //  var search = tokens.filter((val) => {
