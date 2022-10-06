@@ -102,6 +102,10 @@ const App = () => {
               </Route>
             )}
 
+            <Route>
+              <LandingPage path="/" />
+            </Route>
+
             <Route path="/wallet">
               <Wallet />
             </Route>
@@ -118,9 +122,6 @@ const App = () => {
               <Token />
             </Route>
 
-            <Route>
-              <LandingPage path="/" />
-            </Route>
           </Switch>
         </div>
       </Router>
