@@ -35,9 +35,9 @@ function MenuItems() {
         }}
         defaultSelectedKeys={[pathname]}
       >
-        <Menu.Item key="/">
+        <Menu.Item key="/Home">
           <NavLink
-            to="/"
+            to="/Home"
             style={{ marginLeft: "0px", marginRight: "15px", float: "left" }}
           >
             <h1 style={{ color: "lime", display: "inline-block" }}>grid</h1>
@@ -49,23 +49,25 @@ function MenuItems() {
             Home
           </NavLink>
         </Menu.Item>
-        <Menu.Item key="/ETHDEX">
-          <NavLink to="/ETHDEX" style={{ color: "lime" }}>
-            DEX
-          </NavLink>
-        </Menu.Item>
+        {!isAuthenticated ? null : (
+          <Menu.Item key="/ETHDEX">
+            <NavLink to="/ETHDEX" style={{ color: "lime" }}>
+              DEX
+            </NavLink>
+          </Menu.Item>
+        )}
         <Menu.Item key="/wallet">
           <NavLink to="/wallet" style={{ color: "lime" }}>
             Account
           </NavLink>
         </Menu.Item>
-        {admin == false ? null : (
+        {admin == true ? (
           <Menu.Item key="/admin">
             <NavLink to="/admin" style={{ color: "lime" }}>
               Admin
             </NavLink>
           </Menu.Item>
-        )}
+        ) : null}
       </Menu>
     </>
   );
