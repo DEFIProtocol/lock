@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useMoralis } from "react-moralis";
 import useInchDex from "hooks/useInchDex";
 
@@ -67,17 +67,17 @@ function Order({
     var currentTrade =
       buyOrSell == "buy"
         ? {
-          fromToken: fromToken,
-          toToken: toToken,
-          fromAmount: orderAmount,
-          chain: chain,
-        }
+            fromToken: fromToken,
+            toToken: toToken,
+            fromAmount: orderAmount,
+            chain: chain,
+          }
         : {
-          fromToken: fromToken,
-          toToken: toToken,
-          fromAmount: orderAmount,
-          chain: chain,
-        };
+            fromToken: fromToken,
+            toToken: toToken,
+            fromAmount: orderAmount,
+            chain: chain,
+          };
     try {
       var gas = await getQuote(currentTrade);
       var ethGas = `${gas?.estimatedGas} WEI`;
@@ -95,12 +95,12 @@ function Order({
     var ethCost =
       priced == "usd"
         ? (ethValue * orderAmount * 1.01) /*+ decQuote*/
-          .toLocaleString() // buy or sell token in usd
+            .toLocaleString() // buy or sell token in usd
         : orderValue * 1.01; /*+ decQuote*/ // buy or sell token in eth
     var orderTotal =
       priced == "usd"
         ? (orderValue * 1.01) /* (decQuote * (ethValue / price))*/
-          .toLocaleString() // buy or sell token in usd
+            .toLocaleString() // buy or sell token in usd
         : ethCost * (price / ethValue); /* (decQuote * (ethValue / price))*/ // buy or sell token in eth
     var fee =
       priced == "usd"
@@ -267,7 +267,8 @@ function Order({
             border: "2px black solid",
           }}
         >
-          <h3 style={{ color: "#909090" }}>Purchase of {name}:<br />
+          <h3 style={{ color: "#909090" }}>
+            Purchase of {name}:<br />
             {priced == "usd" ? <span>USD</span> : <span>ETH</span>}/${name}
           </h3>
           <p style={{ color: "#909090" }}>

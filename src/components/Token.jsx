@@ -138,6 +138,7 @@ function Token() {
 
   // AAVE address 0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae
 
+  console.log();
   return (
     <div
       style={{
@@ -268,7 +269,7 @@ function Token() {
           float: "left",
           border: "1px solid #202020",
           borderRadius: "0.5rem",
-          backgroundColor: "#909090",
+          backgroundColor: "#202020",
           position: "relative",
         }}
       >
