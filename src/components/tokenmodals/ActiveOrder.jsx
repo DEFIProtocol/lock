@@ -1,23 +1,38 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useMoralisCloudFunction, useMoralis } from "react-moralis";
 import { Skeleton, Card, Typography } from "antd";
 
-function ActiveOrder() {
-  const { isAuthenticated } = useMoralis();
+function ActiveOrder(objectId) {
+  const { isAuthenticated, Moralis } = useMoralis();
   const [userOrder, setUserOrder] = useState({});
+  const [ord, setOrd] = useState();
   const { fetch } = useMoralisCloudFunction(
     "getOrders",
     { order: "orders" },
     { autoFetch: false },
   );
 
-  useEffect(() => {
+  const getOrders = useCallback(async () => {
     if (!isAuthenticated) return null;
+    const user = await Moralis.User.current();
+    let orderIDs = user.get("Orders");
+    orderIDs = orderIDs.map((e) => e.id);
+    setOrd(orderIDs);
+  }, [isAuthenticated, Moralis]);
+
+  useEffect(() => {
+    getOrders();
+  }, [getOrders]);
+
+  useEffect(() => {
     fetch({
-      onSuccess: (orders) => setUserOrder(orders),
+      onSuccess: (orders) =>
+        setUserOrder(orders.filter((order) => order == ord)),
       onError: (error) => console.log(error),
     });
-  }, [fetch, isAuthenticated]);
+  }, [fetch]);
+
+  console.log(userOrder);
 
   return (
     <>

@@ -137,8 +137,7 @@ function Token() {
   }, [isAuthenticated, user]);
 
   // AAVE address 0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae
-
-  console.log();
+  console.log(orders);
   return (
     <div
       style={{

@@ -133,12 +133,9 @@ function Order({
     try {
       const orders = Moralis.Object.extend("Orders");
       const user = Moralis.User.current();
-      const relation = user.relation(orders);
-      console.log(relation);
-      console.log(user);
-      console.log(order);
-      user.set("orders", order);
+      user.add("Orders", order);
       user.save();
+      console.log(order);
     } catch (error) {
       alert(error);
     }
