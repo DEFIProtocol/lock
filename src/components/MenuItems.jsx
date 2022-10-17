@@ -49,18 +49,18 @@ function MenuItems() {
             Home
           </NavLink>
         </Menu.Item>
+        <Menu.Item key="/ETHDEX">
+          <NavLink to="/ETHDEX" style={{ color: "lime" }}>
+            DEX
+          </NavLink>
+        </Menu.Item>
         {!isAuthenticated ? null : (
-          <Menu.Item key="/ETHDEX">
-            <NavLink to="/ETHDEX" style={{ color: "lime" }}>
-              DEX
+          <Menu.Item key="/wallet">
+            <NavLink to="/wallet" style={{ color: "lime" }}>
+              Account
             </NavLink>
           </Menu.Item>
         )}
-        <Menu.Item key="/wallet">
-          <NavLink to="/wallet" style={{ color: "lime" }}>
-            Account
-          </NavLink>
-        </Menu.Item>
         {admin == true ? (
           <Menu.Item key="/admin">
             <NavLink to="/admin" style={{ color: "lime" }}>

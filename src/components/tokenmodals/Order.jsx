@@ -135,7 +135,6 @@ function Order({
       const user = Moralis.User.current();
       user.add("Orders", order);
       user.save();
-      console.log(order);
     } catch (error) {
       alert(error);
     }

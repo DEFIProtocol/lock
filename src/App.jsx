@@ -46,6 +46,7 @@ const styles = {
     backgroundColor: "black",
   },
   header: {
+    overflow: "hidden",
     position: "fixed",
     zIndex: 1,
     width: "100%",

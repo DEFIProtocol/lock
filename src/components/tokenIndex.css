@@ -1,0 +1,103 @@
+.tokenPage {
+  background-color: black;
+  color: lime;
+  width: 100%;
+  display: block;
+}
+
+.tokenDataCard {
+  height: 15vh;
+  width: 100%;
+  margin: 0px 0px;
+  border: 1px solid #202020;
+  border-radius: 0.5rem;
+  background-color: lime;
+}
+
+.rightCard {
+  width: 43%;
+  float: right;
+  position: relative;
+  background-color: #202020;
+  border-radius: 0.5rem;
+  margin: 5px auto;
+  border: 1px solid #202020;
+}
+
+.leftCard {
+  width: 55%;
+  float: left;
+  border: 1px solid #202020;
+  border-radius: 0.5rem;
+  margin: 5px auto;
+  background-color: #202020;
+}
+
+.favorited {
+  float: right;
+  color: lime;
+  font-size: 150%;
+}
+
+.text {
+  color: lime;
+  margin: 0px auto;
+}
+
+.description {
+  color: #909090;
+  float: left;
+  padding-top: 10px;
+}
+
+.image {
+  width: 80%;
+  height: 80%;
+}
+
+.video {
+  width: 100%;
+  position: relative;
+  height: "100%";
+}
+
+.photoGallery {
+  color: DeepSkyBlue;
+  position: relative;
+  margin: 0px auto;
+}
+
+.galleryContainer {
+  width: 100%;
+  position: relative;
+  margin-top: 30px;
+}
+
+.galleryButton {
+  background-color: lime;
+  margin: 5px;
+  float: left;
+  border-radius: 0.5rem;
+  border: 3px solid black;
+}
+
+@media screen and (max-width: 750px) {
+  .rightCard {
+    width: 100%;
+    float: right;
+    position: relative;
+    background-color: #202020;
+    border-radius: 0.5rem;
+    margin: 5px auto;
+    border: 1px solid #202020;
+  }
+
+  .leftCard {
+    width: 100%;
+    float: left;
+    border: 1px solid #202020;
+    border-radius: 0.5rem;
+    margin: 5px auto;
+    background-color: #202020;
+  }
+}

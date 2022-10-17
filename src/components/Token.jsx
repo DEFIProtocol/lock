@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
+import "./tokenIndex.css";
 import {
   useMoralisWeb3Api,
   useMoralis,
@@ -139,24 +140,8 @@ function Token() {
   // AAVE address 0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae
   console.log(orders);
   return (
-    <div
-      style={{
-        backgroundColor: "black",
-        color: "lime",
-        width: "100%",
-        display: "block",
-      }}
-    >
-      <Card
-        style={{
-          height: "15vh",
-          width: "100%",
-          margin: "0px 0px",
-          border: "1px solid #202020",
-          borderRadius: "0.5rem",
-          backgroundColor: "lime",
-        }}
-      >
+    <div className="tokenPage">
+      <Card className="tokenDataCard">
         <TokenData
           price={tokenPrice}
           contractAddress={tokenMetaData?.contractAddress}
@@ -164,17 +149,23 @@ function Token() {
           logo={tokenMetaData?.Logo}
         />
       </Card>
-      <Card
-        style={{
-          width: "43%",
-          float: "right",
-          position: "relative",
-          backgroundColor: "#202020",
-          borderRadius: "0.5rem",
-          margin: "5px auto",
-          border: "1px solid #202020",
-        }}
-      >
+
+      <Card className="leftCard">
+        {watchlist.includes(address) ? (
+          <StarFilled
+            className="favorited"
+            onClick={() => removeWatchlist(address)}
+          />
+        ) : (
+          <StarOutlined
+            className="favorited"
+            onClick={() => addWatchlist(address)}
+          />
+        )}
+        <LineChart address={address} chain={tokenMetaData?.Chain} />
+      </Card>
+
+      <Card className="rightCard">
         <Order
           address={address}
           name={tokenMetaData?.Name}
@@ -187,49 +178,15 @@ function Token() {
         />
       </Card>
 
-      <Card
-        style={{
-          width: "55%",
-          float: "left",
-          border: "1px solid #202020",
-          borderRadius: "0.5rem",
-          backgroundColor: "#202020",
-        }}
-      >
-        {watchlist.includes(address) ? (
-          <StarFilled
-            style={{ float: "right", color: "lime", fontSize: "150%" }}
-            onClick={() => removeWatchlist(address)}
-          />
-        ) : (
-          <StarOutlined
-            style={{ float: "right", color: "lime", fontSize: "150%" }}
-            onClick={() => addWatchlist(address)}
-          />
-        )}
-        <LineChart address={address} chain={tokenMetaData?.Chain} />
-      </Card>
-
-      <Card
-        style={{
-          width: "43%",
-          float: "right",
-          backgroundColor: "#202020",
-          borderRadius: "0.5rem",
-          margin: "5px auto",
-          border: "1px solid #202020",
-        }}
-      >
-        <Title level={3} style={{ color: "lime", margin: "0px auto" }}>
+      <Card className="rightCard">
+        <Title level={3} style={{ color: "lime" }}>
           Description
         </Title>
-        <span style={{ color: "lime" }}>Token Type: {tokenMetaData?.Type}</span>
+        <span className="text">Token Type: {tokenMetaData?.Type}</span>
         {userAddress == address ? (
           <UpdateType address={address} render={() => getTokens()} />
         ) : null}
-        <span style={{ color: "#909090", float: "left", paddingTop: "10px" }}>
-          {tokenMetaData?.Description}
-        </span>
+        <span className="description">{tokenMetaData?.Description}</span>
         <span>
           {userAddress == address ? (
             <UpdateDescription address={address} render={() => getTokens()} />
@@ -237,20 +194,11 @@ function Token() {
         </span>
       </Card>
 
-      <Card
-        style={{
-          width: "43%",
-          float: "right",
-          backgroundColor: "#202020",
-          borderRadius: "0.5rem",
-          margin: "5px auto",
-          border: "1px solid #202020",
-        }}
-      >
-        <Title level={3} style={{ color: "lime", margin: "0px" }}>
+      <Card className="rightCard">
+        <Title level={3} style={{ color: "lime" }}>
           Website
         </Title>
-        <a style={{ color: "lime" }} href={tokenMetaData?.Website}>
+        <a className="text" href={tokenMetaData?.Website}>
           {tokenMetaData?.Website}
         </a>
         <span>
@@ -260,47 +208,23 @@ function Token() {
         </span>
       </Card>
 
-      <Card
-        style={{
-          width: "55%",
-          margin: "5px",
-          padding: "10px",
-          float: "left",
-          border: "1px solid #202020",
-          borderRadius: "0.5rem",
-          backgroundColor: "#202020",
-          position: "relative",
-        }}
-      >
+      <Card className="leftCard">
         <ActiveOrder objectID={orders} />
       </Card>
 
       {!tokenMetaData?.ProfilePic &&
       !tokenMetaData?.Video &&
       !tokenMetaData?.Pictures ? null : (
-        <Card
-          style={{
-            width: "43%",
-            height: "auto",
-            float: "right",
-            backgroundColor: "#202020",
-            borderRadius: "0.5rem",
-            margin: "5px auto",
-            border: "1px solid #202020",
-            display: "flex",
-          }}
-        >
+        <Card className="rightCard">
           <div>
             {!tokenMetaData?.Video ? (
               <Image
                 publicId={tokenMetaData?.ProfilePic}
                 cloudName="gridlock"
-                style={{ width: "80%", height: "80%" }}
+                className="image"
               />
             ) : (
-              <div
-                style={{ width: "100%", position: "relative", height: "auto" }}
-              >
+              <div className="video">
                 <ReactPlayer
                   controls
                   url={tokenMetaData?.Video}
@@ -310,15 +234,7 @@ function Token() {
               </div>
             )}
           </div>
-          <span
-            style={{
-              color: "DeepSkyBlue",
-              align: "center",
-              position: "relative",
-              margin: "0px auto",
-            }}
-            onClick={() => setGalleryIsOpen(true)}
-          >
+          <span className="photoGallery" onClick={() => setGalleryIsOpen(true)}>
             Photo Gallery
           </span>
           <TokenGallery
@@ -329,17 +245,9 @@ function Token() {
             render={() => getTokens()}
           />
           {userAddress == address ? (
-            <div
-              style={{ width: "100%", position: "relative", marginTop: "30px" }}
-            >
+            <div className="galleryContainer">
               <button
-                style={{
-                  backgroundColor: "lime",
-                  margin: "5px",
-                  float: "left",
-                  borderRadius: "0.5rem",
-                  border: "3px solid black",
-                }}
+                className="galleryButton"
                 onClick={() => setAddPhotosIsOpen(true)}
               >
                 Add Photos
@@ -359,32 +267,13 @@ function Token() {
         </Card>
       )}
 
-      <Card
-        style={{
-          width: "55%",
-          margin: "5px",
-          padding: "10px",
-          float: "left",
-          border: "1px solid #202020",
-          borderRadius: "0.5rem",
-          backgroundColor: "#202020",
-          position: "relative",
-        }}
-      >
-        <Title level={3} style={{ color: "lime", margin: "0px auto" }}>
+      <Card className="leftCard">
+        <Title level={3} style={{ color: "lime" }}>
           Announcements
         </Title>
         <span>
           {userAddress == address ? (
-            <button
-              onClick={() => setIsOpen(true)}
-              style={{
-                position: "relative",
-                backgroundColor: "lime",
-                borderRadius: "0.5rem",
-                border: "3px solid black",
-              }}
-            >
+            <button onClick={() => setIsOpen(true)} className="galleryButton">
               Add Announcement
             </button>
           ) : null}
